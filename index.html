@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Practice">
+<title>Wagner Practice Timer</title>
+<style>
+  :root { --bg:#FFF8EC; --ink:#2B2340; --soft:#6B6385; --card:#fff; --go:#22B07D; --stop:#F2994A; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--ink);
+    font-family: ui-rounded, "SF Pro Rounded", -apple-system, "Segoe UI", system-ui, sans-serif; overflow:hidden; }
+  .screen { position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; }
+  .screen.on { display:flex; }
+  h1 { font-size:clamp(32px,6vw,60px); margin:0 0 8px; }
+  .sub { font-size:clamp(18px,2.6vw,26px); color:var(--soft); margin:0 0 32px; }
+  .kids { display:flex; flex-wrap:wrap; gap:24px; justify-content:center; }
+  .kid { border:0; border-radius:32px; width:min(28vw,280px); min-width:200px; padding:28px 16px; color:#fff; cursor:pointer;
+    font:inherit; box-shadow:0 10px 0 rgba(0,0,0,.15); transition:transform .1s; }
+  .kid:active { transform:translateY(6px); box-shadow:0 4px 0 rgba(0,0,0,.15); }
+  .kid .emoji { font-size:72px; display:block; }
+  .kid .name { font-size:40px; font-weight:800; display:block; margin-top:8px; }
+  .kid .what { font-size:22px; opacity:.95; display:block; margin-top:4px; }
+  .who { font-size:clamp(26px,4vw,40px); font-weight:800; margin-bottom:4px; }
+  .clock { font-variant-numeric:tabular-nums; font-weight:900; font-size:clamp(110px,24vw,260px); line-height:1; letter-spacing:-2px; margin:8px 0; transition:color .3s; }
+  .status { font-size:clamp(24px,4vw,40px); font-weight:800; padding:12px 28px; border-radius:999px; margin:8px 0 18px; }
+  .status.go { background:#DDF6EC; color:#137A55; }
+  .status.wait { background:#FFE9D6; color:#B35A12; animation:pulse 1.4s infinite; }
+  @keyframes pulse { 50% { transform:scale(1.05); } }
+  .bar { width:min(80vw,760px); height:26px; background:#EDE6F7; border-radius:999px; overflow:hidden; }
+  .bar > div { height:100%; width:0; background:linear-gradient(90deg,#7C6CF2,#22B07D); border-radius:999px; transition:width .5s; }
+  .meter { width:min(50vw,420px); height:10px; background:#EDE6F7; border-radius:999px; margin-top:18px; overflow:hidden; position:relative; }
+  .meter > div { height:100%; width:0; background:#B9AEF7; }
+  .meter > i { position:absolute; top:-3px; bottom:-3px; width:3px; background:var(--ink); opacity:.5; }
+  .row { display:flex; gap:16px; margin-top:28px; flex-wrap:wrap; justify-content:center; }
+  .btn { border:0; border-radius:22px; padding:18px 36px; font:inherit; font-size:26px; font-weight:800; cursor:pointer; }
+  .btn.big { font-size:40px; padding:26px 64px; background:var(--go); color:#fff; box-shadow:0 8px 0 #158A60; }
+  .btn.done { background:#EDE6F7; color:var(--ink); }
+  .btn.alt { background:#fff; color:var(--ink); border:3px solid #EDE6F7; }
+  .gear { position:fixed; top:14px; right:16px; z-index:20; border:0; background:none; font-size:26px; opacity:.35; padding:10px; cursor:pointer; }
+  .back { position:fixed; top:14px; left:16px; z-index:20; }
+  #celebrate { background:#2B2340; color:#fff; }
+  #celebrate .sub { color:#E3DDFB; }
+  #celebrate video { max-width:min(90vw,900px); max-height:55vh; border-radius:24px; display:none; background:#000; margin:12px 0; }
+  #confetti { position:fixed; inset:0; pointer-events:none; z-index:5; }
+  #celebrate > *:not(canvas) { position:relative; z-index:6; }
+  .panel { position:fixed; inset:0; background:rgba(43,35,64,.55); display:none; align-items:center; justify-content:center; z-index:30; }
+  .panel.on { display:flex; }
+  .sheet { background:#fff; border-radius:28px; padding:28px; width:min(92vw,620px); max-height:90vh; overflow:auto; text-align:left; }
+  .sheet h2 { margin:0 0 12px; }
+  .sheet label { display:block; font-weight:700; margin:18px 0 6px; }
+  .sheet input[type=range] { width:100%; }
+  .sheet input[type=text], .sheet input[type=url] { width:100%; font-size:16px; padding:10px; border-radius:12px; border:2px solid #EDE6F7; }
+  .small { font-size:14px; color:var(--soft); }
+  .note { font-size:16px; color:var(--soft); margin-top:22px; max-width:640px; }
+  .err { color:#C0392B; font-size:20px; max-width:640px; }
+  .metro { margin-top:18px; background:#fff; border:3px solid #EDE6F7; border-radius:28px; padding:16px 20px; width:min(94vw,720px); }
+  .metro .mrow { display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; margin:8px 0; }
+  .metro .bpm { font-size:64px; font-weight:800; min-width:150px; text-align:center; line-height:1; }
+  .metro .bpm small { display:block; font-size:16px; color:var(--soft); font-weight:600; }
+  .metro .mb { font-size:40px; font-weight:800; width:84px; height:84px; border-radius:50%; border:3px solid #EDE6F7; background:#fff; color:var(--ink); touch-action:manipulation; user-select:none; -webkit-user-select:none; }
+  .metro .mgo { font-size:30px; font-weight:800; padding:22px 44px; border-radius:999px; border:0; background:var(--go); color:#fff; min-width:220px; touch-action:manipulation; }
+  .metro .mgo.on { background:var(--stop); }
+  .metro .tap { font-size:24px; font-weight:700; padding:20px 30px; border-radius:999px; border:3px solid #EDE6F7; background:#fff; color:var(--ink); touch-action:manipulation; }
+  .metro input[type=range] { width:100%; height:44px; }
+  .metro .beats button { font-size:22px; font-weight:700; padding:14px 20px; border-radius:16px; border:3px solid #EDE6F7; background:#fff; color:var(--ink); touch-action:manipulation; }
+  .metro .beats button.sel { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .metro .dots { display:flex; gap:10px; justify-content:center; min-height:26px; }
+  .metro .dots i { width:22px; height:22px; border-radius:50%; background:#EDE6F7; display:block; }
+  .metro .dots i.hit { background:var(--go); } .metro .dots i.hit.acc { background:var(--stop); }
+  #metroToggle { font-size:22px; padding:14px 26px; }
+</style>
+</head>
+<body>
+<button class="gear" id="gear" aria-label="Parent settings">⚙️</button>
+
+<!-- 1. Pick who is practicing -->
+<section class="screen on" id="pick">
+  <h1>Who's practicing?</h1>
+  <p class="sub">Tap your name, then tap Start.</p>
+  <div class="kids" id="kids"></div>
+  <p class="note">The clock only runs while your instrument is playing. 🎶</p>
+</section>
+
+<!-- 2. Ready -->
+<section class="screen" id="ready">
+  <button class="btn alt back" id="backBtn">← Back</button>
+  <div class="who" id="readyWho"></div>
+  <div class="clock" id="readyClock"></div>
+  <button class="btn big" id="startBtn">▶ Start</button>
+  <p class="err" id="micErr"></p>
+</section>
+
+<!-- 3. Practicing -->
+<section class="screen" id="practice">
+  <div class="who" id="pracWho"></div>
+  <div class="clock" id="clock">40:00</div>
+  <div class="status wait" id="status">Start playing!</div>
+  <div class="bar"><div id="prog"></div></div>
+  <div class="meter" title="sound level"><div id="lvl"></div><i id="thr"></i></div>
+  <div class="row"><button class="btn alt" id="metroToggle">🥁 Metronome</button><button class="btn done" id="doneBtn">I'm done for now</button></div>
+  <div class="metro" id="metro" style="display:none">
+    <div class="mrow">
+      <button class="mb" id="mMinus" aria-label="slower">−</button>
+      <div class="bpm"><span id="mBpm">80</span><small>beats per minute</small></div>
+      <button class="mb" id="mPlus" aria-label="faster">+</button>
+    </div>
+    <input type="range" id="mSlider" min="40" max="208" step="1" value="80" aria-label="tempo">
+    <div class="dots" id="mDots"></div>
+    <div class="mrow beats" id="mBeats">
+      <span class="small">Beats:</span>
+      <button data-b="0">Off</button><button data-b="2">2</button><button data-b="3">3</button><button data-b="4">4</button><button data-b="6">6</button>
+    </div>
+    <div class="mrow"><button class="mgo" id="mGo">▶ Start</button><button class="tap" id="mTap">👆 Tap tempo</button></div>
+  </div>
+</section>
+
+<!-- 4. Celebration -->
+<section class="screen" id="celebrate">
+  <canvas id="confetti"></canvas>
+  <h1 id="celebTitle">You did it! 🎉</h1>
+  <p class="sub" id="celebSub"></p>
+  <video id="vid" playsinline preload="auto"></video>
+  <div class="row"><button class="btn alt" id="soundBtn" style="display:none">🔊 Tap for sound</button>
+  <button class="btn big" id="finishBtn">All done</button></div>
+</section>
+
+<!-- 5. Stopped early -->
+<section class="screen" id="early">
+  <h1>Nice work! 👏</h1>
+  <p class="sub" id="earlySub"></p>
+  <div class="row"><button class="btn big" id="keepBtn">Keep going</button><button class="btn done" id="earlyDoneBtn">Finish</button></div>
+</section>
+
+<!-- Parent settings -->
+<div class="panel" id="panel"><div class="sheet">
+  <h2>Parent settings</h2>
+  <p class="small">Sound is checked live on this iPad to see if an instrument is playing. Nothing is recorded, saved or uploaded; only minutes are logged.</p>
+  <label>Sensitivity: <span id="sensVal"></span></label>
+  <input type="range" id="sens" min="1" max="10" step="1">
+  <p class="small">Higher = soft playing counts. Lower = only clear playing counts (if talking or room noise is counting, turn it down).</p>
+  <label>Pause after this many seconds of quiet: <span id="quietVal"></span></label>
+  <input type="range" id="quiet" min="1.5" max="6" step="0.5">
+  <div class="row" style="justify-content:flex-start;margin-top:14px">
+    <button class="btn alt" id="calBtn" style="font-size:18px;padding:12px 20px">Measure quiet room (3 sec)</button>
+    <span class="small" id="calMsg" style="align-self:center"></span>
+  </div>
+  <label>Live level</label>
+  <div class="meter" style="width:100%;margin-top:4px"><div id="lvl2"></div><i id="thr2"></i></div>
+  <p class="small">The bar should jump past the line when someone plays, and stay left of it when the room is quiet.</p>
+  <label>Google Sheet logging address</label>
+  <input type="url" id="logUrl" placeholder="https://script.google.com/macros/s/…/exec">
+  <label>Celebration video address</label>
+  <input type="url" id="vidUrl" placeholder="celebrate.mp4">
+  <p class="small" id="queueMsg"></p>
+  <div class="row" style="justify-content:flex-end"><button class="btn alt" id="testLogBtn" style="font-size:18px;padding:12px 20px">Send test row</button><button class="btn big" id="closePanel" style="font-size:22px;padding:14px 30px">Save</button></div>
+</div></div>
+
+<script>
+// Practice sound detector: pure logic, no audio APIs, so it can be unit-tested.
+// Feed it one loudness reading (RMS, 0..1) per frame (~10 frames/sec).
+function createDetector(opts) {
+  var o = Object.assign({
+    sensitivity: 5,     // 1 (only loud playing counts) .. 10 (soft playing counts)
+    quietMs: 2500,      // pause after this long with no instrument sound
+    startFrames: 3,     // need this many loud frames out of the last 5 to (re)start
+    absMin: 0.004,      // never count anything quieter than this (at sensitivity 5)
+    steadyCv: 0.05,     // a sound this steady for steadyMs is a fan/dishwasher, not music
+    steadyMs: 4000
+  }, opts || {});
+  var floor = null, playing = false, lastSoundAt = -1e9, recent = [], hist = [];
+  function threshold() {
+    var mult = 1.4 + (10 - o.sensitivity) * 0.5;      // 1.4x .. 5.9x the room noise
+    var minAbs = o.absMin * (11 - o.sensitivity) / 6;
+    return Math.max((floor || 0) * mult, minAbs);
+  }
+  function update(level, nowMs, gated) {
+    // gated = a metronome click may be in this mic frame: treat as no sound, and
+    // don't let it touch the background level, the steady-noise history or the start count.
+    if (gated) {
+      if (playing && nowMs - lastSoundAt > o.quietMs) playing = false;
+      return { playing: playing, loud: false, gated: true, level: 0, floor: floor, threshold: threshold() };
+    }
+    if (floor === null) floor = level;
+    hist.push({ t: nowMs, v: level });
+    while (hist.length && nowMs - hist[0].t > o.steadyMs) hist.shift();
+    var loud = level > threshold();
+    if (level < floor) floor = floor * 0.7 + level * 0.3;          // quieter room: adapt fast
+    else if (!loud) floor = floor * 0.99 + level * 0.01;           // background creeping up: adapt slowly
+    // Steady-noise guard: music rises and falls; an appliance hum does not.
+    if (loud && hist.length > 10 && nowMs - hist[0].t >= o.steadyMs * 0.9) {
+      var m = 0; hist.forEach(function (h) { m += h.v; }); m /= hist.length;
+      var s = 0; hist.forEach(function (h) { s += (h.v - m) * (h.v - m); }); s = Math.sqrt(s / hist.length);
+      if (m > 0 && s / m < o.steadyCv) { floor = m; loud = false; }
+    }
+    recent.push(loud); if (recent.length > 5) recent.shift();
+    if (loud) lastSoundAt = nowMs;
+    if (!playing && recent.filter(Boolean).length >= o.startFrames) playing = true;
+    if (playing && nowMs - lastSoundAt > o.quietMs) playing = false;
+    return { playing: playing, loud: loud, level: level, floor: floor, threshold: threshold() };
+  }
+  return {
+    update: update,
+    set: function (k, v) { o[k] = v; },
+    get: function (k) { return o[k]; },
+    calibrate: function (quietLevel) { floor = quietLevel; },
+    reset: function () { playing = false; recent = []; hist = []; lastSoundAt = -1e9; }
+  };
+}
+if (typeof module !== 'undefined') module.exports = { createDetector: createDetector };
+
+</script>
+<script>
+(function () {
+  // ---------- Config ----------
+  var KIDS = [
+    { name: 'Abram', instrument: 'Piano',  minutes: 40, emoji: '🎹', color: '#7C6CF2' },
+    { name: 'Eden',  instrument: 'Piano',  minutes: 20, emoji: '🎹', color: '#F06292' },
+    { name: 'Ellis', instrument: 'Violin', minutes: 25, emoji: '🎻', color: '#26A69A' }
+  ];
+  var DEFAULT_LOG_URL = 'https://script.google.com/macros/s/AKfycbyrQFq9aeZiwDeV-N7UFdkFFm03anLJu8McENo7iP0UZUT8_DBu7oRvxHaYAZdhRmIN/exec';
+  var DEFAULT_VIDEO = '__VIDEO_URL__';
+  var store = {
+    get: function (k, d) { try { var v = localStorage.getItem('wpt.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem('wpt.' + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  function logUrl() { var u = store.get('logUrl', ''); return u || (DEFAULT_LOG_URL.indexOf('__') === 0 ? '' : DEFAULT_LOG_URL); }
+  function vidUrl() { var u = store.get('vidUrl', ''); return u || (DEFAULT_VIDEO.indexOf('__') === 0 ? 'celebrate.mp4' : DEFAULT_VIDEO); }
+
+  var $ = function (id) { return document.getElementById(id); };
+  function show(id) { document.querySelectorAll('.screen').forEach(function (s) { s.classList.toggle('on', s.id === id); }); }
+  function fmt(sec) { sec = Math.max(0, Math.ceil(sec)); var m = Math.floor(sec / 60), s = sec % 60; return m + ':' + (s < 10 ? '0' : '') + s; }
+
+  // ---------- Detector + microphone ----------
+  var det = createDetector({ sensitivity: store.get('sens', 5), quietMs: store.get('quietMs', 2500) });
+  var savedFloor = store.get('floor', null); if (savedFloor) det.calibrate(savedFloor);
+  var audio = null; // {ctx, stream, analyser, buf}
+  function startMic() {
+    if (audio) return Promise.resolve();
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return Promise.reject(new Error('This page must be opened over https:// to use the microphone.'));
+    return navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } })
+      .then(function (stream) {
+        var Ctx = window.AudioContext || window.webkitAudioContext; var ctx = new Ctx();
+        var src = ctx.createMediaStreamSource(stream);
+        var hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 60;   // ignore rumble / thumps
+        var analyser = ctx.createAnalyser(); analyser.fftSize = 2048;
+        src.connect(hp); hp.connect(analyser);  // never connected to speakers, never recorded
+        audio = { ctx: ctx, stream: stream, analyser: analyser, buf: new Float32Array(analyser.fftSize) };
+        if (ctx.state === 'suspended') ctx.resume();
+      });
+  }
+  function stopMic() {
+    metro.stop();
+    if (!audio) return; audio.stream.getTracks().forEach(function (t) { t.stop(); }); try { audio.ctx.close(); } catch (e) {} audio = null;
+  }
+  // ---------- Metronome (Web Audio, lookahead-scheduled, shares the mic's AudioContext) ----------
+  var metro = (function () {
+    var BPM_MIN = 40, BPM_MAX = 208, CLICK = 0.03, GATE_BEFORE = 0.01, GATE_AFTER = 0.085;
+    var bpm = Math.min(BPM_MAX, Math.max(BPM_MIN, store.get('metroBpm', 80) | 0));
+    var beats = store.get('metroBeats', 4);
+    var ctx = null, ownCtx = false, gain = null, running = false, timer = null, nextT = 0, beatN = 0, clicks = [];
+    function getCtx() {
+      if (audio && audio.ctx && audio.ctx.state !== 'closed') { if (ctx !== audio.ctx) { ctx = audio.ctx; ownCtx = false; gain = null; } }
+      else if (!ctx || ctx.state === 'closed') { var C = window.AudioContext || window.webkitAudioContext; ctx = new C(); ownCtx = true; gain = null; }
+      if (!gain) { gain = ctx.createGain(); gain.gain.value = 0.35; gain.connect(ctx.destination); }  // moderate volume
+      if (ctx.state === 'suspended') ctx.resume();
+      return ctx;
+    }
+    function click(t, accent) {
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'square'; o.frequency.value = accent ? 1760 : 1100;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(accent ? 1 : 0.6, t + 0.002);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + CLICK);
+      o.connect(g); g.connect(gain); o.start(t); o.stop(t + CLICK + 0.01);
+      clicks.push(t);
+    }
+    function schedule() {
+      var ahead = ctx.currentTime + 0.12;               // schedule 120 ms ahead, every 25 ms
+      while (nextT < ahead) {
+        var b = beats ? beatN % beats : -1;
+        click(nextT, b === 0);
+        (function (bb, when) { setTimeout(function () { drawDot(bb); }, Math.max(0, (when - ctx.currentTime) * 1000)); })(b, nextT);
+        nextT += 60 / bpm; beatN++;
+      }
+      while (clicks.length && clicks[0] < ctx.currentTime - 1) clicks.shift();
+    }
+    function drawDot(b) {
+      var d = $('mDots'); if (!d) return; var n = beats || 1;
+      if (d.children.length !== n) { d.innerHTML = ''; for (var i = 0; i < n; i++) d.appendChild(document.createElement('i')); }
+      for (var j = 0; j < n; j++) d.children[j].className = (j === (b < 0 ? 0 : b) && running) ? ('hit' + (j === 0 && beats ? ' acc' : '')) : '';
+    }
+    function start() { getCtx(); running = true; beatN = 0; nextT = ctx.currentTime + 0.06; schedule(); timer = setInterval(schedule, 25); ui(); }
+    function stop() { running = false; clearInterval(timer); timer = null; clicks = []; ui(); drawDot(-2);
+      if (ownCtx && ctx) { try { ctx.close(); } catch (e) {} ctx = null; gain = null; } }
+    function setBpm(v) { bpm = Math.min(BPM_MAX, Math.max(BPM_MIN, Math.round(v))); store.set('metroBpm', bpm); ui(); }
+    function setBeats(v) { beats = v; store.set('metroBeats', v); beatN = 0; ui(); drawDot(-2); }
+    // Is a click (or its echo) inside the mic frame that ends now? Frame covers bufSec of audio.
+    function gated(bufSec) {
+      if (!running || !ctx) return false;
+      var now = ctx.currentTime, lat = (ctx.outputLatency || 0) + (ctx.baseLatency || 0);
+      for (var i = 0; i < clicks.length; i++) {
+        var t = clicks[i] + lat;
+        if (t - GATE_BEFORE <= now && t + GATE_AFTER >= now - bufSec) return true;
+      }
+      return false;
+    }
+    function ui() {
+      if (!$('mBpm')) return;
+      $('mBpm').textContent = bpm; $('mSlider').value = bpm;
+      $('mGo').textContent = running ? '■ Stop' : '▶ Start'; $('mGo').classList.toggle('on', running);
+      Array.prototype.forEach.call(document.querySelectorAll('#mBeats button'), function (b) { b.classList.toggle('sel', +b.dataset.b === beats); });
+    }
+    var taps = [];
+    function tap() {
+      var t = performance.now(); if (taps.length && t - taps[taps.length - 1] > 2000) taps = [];
+      taps.push(t); if (taps.length > 6) taps.shift();
+      if (taps.length >= 2) { var s = 0; for (var i = 1; i < taps.length; i++) s += taps[i] - taps[i - 1]; setBpm(60000 / (s / (taps.length - 1))); }
+    }
+    return { start: start, stop: stop, toggle: function () { running ? stop() : start(); }, setBpm: setBpm, getBpm: function () { return bpm; },
+      setBeats: setBeats, tap: tap, gated: gated, ui: ui, isRunning: function () { return running; } };
+  })();
+  function readLevel() {
+    if (!audio) return 0;
+    if (audio.analyser.getFloatTimeDomainData) audio.analyser.getFloatTimeDomainData(audio.buf);
+    else { var b = new Uint8Array(audio.analyser.fftSize); audio.analyser.getByteTimeDomainData(b); for (var j = 0; j < b.length; j++) audio.buf[j] = (b[j] - 128) / 128; }
+    var s = 0; for (var i = 0; i < audio.buf.length; i++) s += audio.buf[i] * audio.buf[i];
+    return Math.sqrt(s / audio.buf.length);
+  }
+  function meter(lvlEl, thrEl, r) {
+    var scale = function (v) { return Math.min(100, Math.max(0, (Math.log10(Math.max(v, 1e-4)) + 4) / 3.5 * 100)); };
+    lvlEl.style.width = scale(r.level) + '%'; thrEl.style.left = scale(r.threshold) + '%';
+  }
+
+  // ---------- Wake lock (keep the screen on) ----------
+  var wake = null;
+  function keepAwake() { try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(function (w) { wake = w; }).catch(function () {}); } catch (e) {} }
+  function releaseAwake() { try { wake && wake.release(); } catch (e) {} wake = null; }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible' && session) keepAwake(); });
+
+  // ---------- Session ----------
+  var kid = null, session = null, tick = null;
+  function renderKids() {
+    var box = $('kids'); box.innerHTML = '';
+    KIDS.forEach(function (k) {
+      var b = document.createElement('button'); b.className = 'kid'; b.style.background = k.color;
+      b.innerHTML = '<span class="emoji">' + k.emoji + '</span><span class="name">' + k.name + '</span><span class="what">' + k.instrument + ' · ' + k.minutes + ' min</span>';
+      b.onclick = function () { kid = k; $('readyWho').textContent = k.emoji + ' ' + k.name + ' · ' + k.instrument; $('readyClock').textContent = fmt(k.minutes * 60); $('micErr').textContent = ''; show('ready'); };
+      box.appendChild(b);
+    });
+  }
+  function begin() {
+    $('micErr').textContent = '';
+    startMic().then(function () {
+      det.reset();
+      session = { kid: kid, startedAt: new Date(), played: 0, last: performance.now(), done: false };
+      $('pracWho').textContent = kid.emoji + ' ' + kid.name;
+      keepAwake(); show('practice'); render(false);
+      tick = setInterval(step, 100);
+    }).catch(function (e) {
+      $('micErr').textContent = 'I need the microphone to hear you play. ' + (e && e.name === 'NotAllowedError' ? 'Ask a grown-up to allow the microphone for this page in Settings › Safari.' : (e && e.message || ''));
+    });
+  }
+  function step() {
+    var now = performance.now(), dt = Math.min(0.5, (now - session.last) / 1000); session.last = now;
+    var r = det.update(readLevel(), now, metro.gated(audio ? audio.analyser.fftSize / audio.ctx.sampleRate : 0.05));
+    if (r.playing) session.played += dt;
+    meter($('lvl'), $('thr'), r); if ($('panel').classList.contains('on')) meter($('lvl2'), $('thr2'), r);
+    render(r.playing);
+    if (session.played >= session.kid.minutes * 60) finish(true);
+  }
+  function render(playing) {
+    var target = session.kid.minutes * 60, left = target - session.played;
+    $('clock').textContent = fmt(left);
+    $('clock').style.color = playing ? 'var(--ink)' : '#B9AEF7';
+    var st = $('status');
+    if (playing) { st.className = 'status go'; st.textContent = '🎵 Playing — keep it up!'; }
+    else { st.className = 'status wait'; st.textContent = session.played < 1 ? '🎶 Start playing!' : '⏸ Paused - keep playing!'; }
+    $('prog').style.width = Math.min(100, session.played / target * 100) + '%';
+  }
+  function pauseTick() { clearInterval(tick); tick = null; }
+  function finish(completed) {
+    if (!session || session.done) return;
+    pauseTick(); session.done = true; stopMic(); releaseAwake();
+    logSession(session, completed);
+    if (completed) celebrate(); else { show('pick'); }
+    session = null;
+  }
+  function earlyStop() {
+    pauseTick();
+    var left = session.kid.minutes * 60 - session.played;
+    $('earlySub').textContent = 'You played ' + Math.floor(session.played / 60) + ' min ' + Math.floor(session.played % 60) + ' sec. Only ' + fmt(left) + ' to go!';
+    show('early');
+  }
+  function keepGoing() { session.last = performance.now(); show('practice'); tick = setInterval(step, 100); }
+
+  // ---------- Logging to Google Sheet ----------
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function logSession(s, completed) {
+    var d = s.startedAt, end = new Date();
+    var row = {
+      date: d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()),
+      start: pad(d.getHours()) + ':' + pad(d.getMinutes()),
+      kid: s.kid.name, instrument: s.kid.instrument, target: s.kid.minutes,
+      actual: Math.round(s.played / 60 * 10) / 10, completed: completed ? 'Yes' : 'No',
+      length: Math.round((end - d) / 60000 * 10) / 10, id: d.getTime() + '-' + s.kid.name
+    };
+    var q = store.get('queue', []); q.push(row); store.set('queue', q); flush();
+  }
+  function flush() {
+    var url = logUrl(), q = store.get('queue', []);
+    updateQueueMsg();
+    if (!url || !q.length || !navigator.onLine) return;
+    // text/plain + no-cors = a "simple" request Apps Script accepts from any page.
+    fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ rows: q }) })
+      .then(function () { var cur = store.get('queue', []); store.set('queue', cur.slice(q.length)); updateQueueMsg(); })
+      .catch(function () { /* stays queued; retried later */ });
+  }
+  function updateQueueMsg() { var n = store.get('queue', []).length; $('queueMsg').textContent = n ? n + ' session(s) waiting to be sent to the Sheet.' : (logUrl() ? 'All sessions sent.' : 'No Sheet address set yet; sessions are kept on this iPad until one is added.'); }
+  window.addEventListener('online', flush); setInterval(flush, 5 * 60 * 1000);
+
+  // ---------- Celebration ----------
+  var confettiOn = false;
+  function celebrate() {
+    var k = kid;
+    $('celebTitle').textContent = 'You did it, ' + k.name + '! 🎉';
+    $('celebSub').textContent = k.minutes + ' minutes of ' + k.instrument.toLowerCase() + ' practice. Amazing!';
+    show('celebrate'); startConfetti();
+    var v = $('vid'); v.style.display = 'none'; $('soundBtn').style.display = 'none';
+    v.onerror = function () { v.style.display = 'none'; $('soundBtn').style.display = 'none'; };  // no video yet: confetti only
+    v.oncanplay = function () { v.style.display = 'block'; };
+    v.src = vidUrl(); v.muted = false;
+    var p = v.play();
+    if (p && p.catch) p.catch(function () { v.muted = true; v.play().then(function () { $('soundBtn').style.display = 'inline-block'; }).catch(function () {}); });
+  }
+  function startConfetti() {
+    var c = $('confetti'), x = c.getContext('2d'); c.width = innerWidth; c.height = innerHeight; confettiOn = true;
+    var cols = ['#7C6CF2', '#F06292', '#26A69A', '#FFD54F', '#4FC3F7', '#FF8A65'], P = [];
+    for (var i = 0; i < 180; i++) P.push({ x: Math.random() * c.width, y: -Math.random() * c.height, w: 8 + Math.random() * 8, h: 10 + Math.random() * 10, vy: 2 + Math.random() * 4, vx: -1.5 + Math.random() * 3, r: Math.random() * 6, vr: -0.2 + Math.random() * 0.4, c: cols[i % cols.length] });
+    (function loop() {
+      if (!confettiOn) { x.clearRect(0, 0, c.width, c.height); return; }
+      x.clearRect(0, 0, c.width, c.height);
+      P.forEach(function (p) { p.y += p.vy; p.x += p.vx; p.r += p.vr; if (p.y > c.height + 20) { p.y = -20; p.x = Math.random() * c.width; }
+        x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c; x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); x.restore(); });
+      requestAnimationFrame(loop);
+    })();
+  }
+  function endCelebration() { confettiOn = false; var v = $('vid'); v.pause(); v.removeAttribute('src'); v.load(); show('pick'); }
+
+  // ---------- Parent panel (hold the gear for 1 second) ----------
+  var holdT = null, panelMic = false;
+  function openPanel() {
+    $('sens').value = det.get('sensitivity'); $('sensVal').textContent = det.get('sensitivity');
+    $('quiet').value = det.get('quietMs') / 1000; $('quietVal').textContent = det.get('quietMs') / 1000;
+    $('logUrl').value = store.get('logUrl', '') || logUrl(); $('vidUrl').value = store.get('vidUrl', '');
+    updateQueueMsg(); $('panel').classList.add('on');
+    if (!session) startMic().then(function () { panelMic = true; (function live() { if (!panelMic || !audio) return; meter($('lvl2'), $('thr2'), det.update(readLevel(), performance.now())); setTimeout(live, 100); })(); }).catch(function () {});
+  }
+  function closePanel() {
+    store.set('logUrl', $('logUrl').value.trim()); store.set('vidUrl', $('vidUrl').value.trim());
+    $('panel').classList.remove('on'); if (panelMic) { panelMic = false; if (!session) stopMic(); det.reset(); } flush();
+  }
+  var g = $('gear');
+  g.addEventListener('pointerdown', function () { holdT = setTimeout(openPanel, 1000); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (e) { g.addEventListener(e, function () { clearTimeout(holdT); }); });
+  $('sens').oninput = function () { var v = +this.value; det.set('sensitivity', v); store.set('sens', v); $('sensVal').textContent = v; };
+  $('quiet').oninput = function () { var v = +this.value; det.set('quietMs', v * 1000); store.set('quietMs', v * 1000); $('quietVal').textContent = v; };
+  $('calBtn').onclick = function () {
+    metro.stop(); $('calMsg').textContent = 'Shh… measuring';
+    startMic().then(function () { var vals = [], n = 0, t = setInterval(function () { vals.push(readLevel()); if (++n >= 30) { clearInterval(t); vals.sort(function (a, b) { return a - b; }); var f = vals[Math.floor(vals.length / 2)]; det.calibrate(f); store.set('floor', f); $('calMsg').textContent = 'Done ✓'; } }, 100); }).catch(function (e) { $('calMsg').textContent = 'Microphone not available'; });
+  };
+  $('testLogBtn').onclick = function () { store.set('logUrl', $('logUrl').value.trim()); logSession({ kid: { name: 'TEST', instrument: 'Test', minutes: 0 }, startedAt: new Date(), played: 0 }, false); $('queueMsg').textContent = 'Test row sent — check the Sheet (delete the TEST row after).'; };
+  $('closePanel').onclick = closePanel;
+
+  // ---------- Wire up ----------
+  $('backBtn').onclick = function () { show('pick'); };
+  $('startBtn').onclick = begin;
+  $('doneBtn').onclick = function () { metro.stop(); earlyStop(); };
+  $('metroToggle').onclick = function () { var m = $('metro'); m.style.display = m.style.display === 'none' ? 'block' : 'none'; metro.ui(); };
+  $('mGo').onclick = metro.toggle;
+  $('mTap').onclick = metro.tap;
+  $('mSlider').oninput = function () { metro.setBpm(+this.value); };
+  Array.prototype.forEach.call(document.querySelectorAll('#mBeats button'), function (b) { b.onclick = function () { metro.setBeats(+b.dataset.b); }; });
+  function holdRepeat(el, d) {
+    var t1 = null, t2 = null;
+    function end() { clearTimeout(t1); clearInterval(t2); t1 = t2 = null; }
+    el.addEventListener('pointerdown', function (e) { e.preventDefault(); metro.setBpm(metro.getBpm() + d); end();
+      t1 = setTimeout(function () { t2 = setInterval(function () { metro.setBpm(metro.getBpm() + d); }, 80); }, 450); });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { el.addEventListener(ev, end); });
+  }
+  holdRepeat($('mMinus'), -1); holdRepeat($('mPlus'), 1);
+  metro.ui();
+  $('keepBtn').onclick = keepGoing;
+  $('earlyDoneBtn').onclick = function () { session.done = false; finish(false); };
+  $('finishBtn').onclick = endCelebration;
+  $('soundBtn').onclick = function () { var v = $('vid'); v.muted = false; v.currentTime = 0; v.play(); this.style.display = 'none'; };
+  renderKids(); flush();
+  window.__wpt = { metro: metro, det: det, KIDS: KIDS, logSession: logSession, getSession: function () { return session; } }; // for testing
+})();
+</script>
+</body>
+</html>
