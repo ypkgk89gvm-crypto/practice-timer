@@ -70,6 +70,52 @@
   .metro .dots i { width:22px; height:22px; border-radius:50%; background:#EDE6F7; display:block; }
   .metro .dots i.hit { background:var(--go); } .metro .dots i.hit.acc { background:var(--stop); }
   #metroToggle { font-size:22px; padding:14px 26px; }
+  /* ---- scrolling screens (content centred when it fits, scrolls when it doesn't) ---- */
+  .screen.scroll { justify-content:flex-start; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-top:64px; }
+  .wrap { margin:auto 0; display:flex; flex-direction:column; align-items:center; width:100%; }
+  .btn.lesson { background:#FFF3C4; color:#6A4B00; border:3px solid #F5D76E; font-size:24px; padding:16px 30px; }
+  /* ---- teacher's notes (kid view) ---- */
+  .tnotes { width:min(94vw,760px); text-align:left; margin-top:18px; }
+  .tnotes h2 { font-size:28px; margin:8px 0 10px; display:flex; align-items:center; gap:10px; }
+  .lessonhd { display:flex; align-items:center; justify-content:space-between; font-size:18px; color:var(--soft); font-weight:700; margin:16px 4px 6px; }
+  .lessonhd button { border:0; background:none; font-size:18px; color:var(--soft); padding:6px 10px; }
+  .tn { background:#fff; border-radius:20px; padding:14px 18px; margin:8px 0; display:flex; gap:14px; align-items:flex-start; box-shadow:0 3px 0 rgba(0,0,0,.06); }
+  .tn .ic { font-size:34px; line-height:1; }
+  .tn .tx { font-size:24px; font-weight:800; line-height:1.25; }
+  .tn .q { font-size:16px; color:var(--soft); margin-top:6px; font-style:italic; }
+  .tn.key { border:3px solid #FFD54F; background:#FFFBEA; }
+  .pill { display:inline-block; font-size:14px; font-weight:800; border-radius:999px; padding:3px 10px; margin:6px 6px 0 0; background:#EDE6F7; color:var(--ink); font-style:normal; }
+  .pill.k { background:#FFE082; } .pill.h { background:#C8F2DF; }
+  details.older summary { font-size:18px; color:var(--soft); font-weight:700; padding:10px 4px; cursor:pointer; }
+  .draftbar { background:#FFF3C4; border-radius:18px; padding:12px 18px; margin-top:20px; font-size:18px; }
+  /* ---- lesson screen ---- */
+  .ltime { font-size:56px; font-weight:900; font-variant-numeric:tabular-nums; }
+  .transcript { width:min(94vw,820px); height:38vh; overflow-y:auto; background:#fff; border-radius:22px; padding:16px 20px; text-align:left; font-size:20px; line-height:1.4; margin:12px 0; border:3px solid #EDE6F7; }
+  .transcript .interim { color:#A39BBF; }
+  .btn.stopbig { background:#E2574C; box-shadow:0 8px 0 #A8382F; }
+  /* ---- review screen ---- */
+  .review { width:min(96vw,860px); text-align:left; }
+  .rv { background:#fff; border-radius:18px; padding:12px 14px; margin:10px 0; border:2px solid #EDE6F7; }
+  .rv .r1 { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .rv select, .rv input { font-size:17px; padding:9px; border-radius:12px; border:2px solid #EDE6F7; background:#fff; color:var(--ink); }
+  .rv input.txt { flex:1 1 300px; min-width:200px; font-weight:700; }
+  .rv input.bpmIn { width:88px; }
+  .rv .q { font-size:14px; color:var(--soft); margin-top:6px; font-style:italic; }
+  .rv .tg { border:2px solid #EDE6F7; background:#fff; border-radius:12px; font-size:16px; padding:8px 10px; color:var(--ink); }
+  .rv .tg.on { background:#FFE082; border-color:#F5C842; }
+  .rv .del { border:0; background:#FBE3E1; color:#A8382F; border-radius:12px; font-size:16px; padding:9px 12px; }
+  .review textarea { width:100%; min-height:180px; font-size:16px; border-radius:14px; border:2px solid #EDE6F7; padding:10px; }
+  /* ---- coaching during practice ---- */
+  #practice.coached .clock { font-size:clamp(84px,15vw,190px); }
+  #ready.hasnotes .clock { font-size:clamp(80px,14vw,170px); }
+  .nudge { min-height:0; font-size:clamp(20px,3vw,28px); font-weight:800; border-radius:18px; padding:0 20px; margin:0; max-width:min(94vw,820px); transition:all .3s; overflow:hidden; max-height:0; }
+  .nudge.on { background:#FFF0C2; color:#7A5300; padding:12px 20px; margin:10px 0 0; max-height:200px; }
+  .coach { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; width:min(96vw,900px); margin-top:14px; }
+  .cc { background:#fff; border:3px solid #EDE6F7; border-radius:20px; padding:12px 16px; text-align:left; flex:1 1 240px; max-width:420px; font:inherit; color:var(--ink); }
+  .cc .t { font-size:20px; font-weight:800; line-height:1.25; } .cc .st { font-size:17px; color:var(--soft); margin-top:6px; min-height:20px; }
+  .cc.met { border-color:#7FD8B5; background:#EFFBF5; } .cc.warn { border-color:#F5C842; background:#FFFBEA; }
+  .cc.rem { cursor:pointer; } .cc.rem.done { border-color:#7FD8B5; background:#EFFBF5; } .cc.rem.done .st { color:#137A55; font-weight:800; }
+  .cc .setm { margin-top:8px; font:inherit; font-size:17px; font-weight:800; border:0; border-radius:14px; padding:10px 16px; background:var(--ink); color:#fff; }
 </style>
 </head>
 <body>
@@ -84,21 +130,29 @@
 </section>
 
 <!-- 2. Ready -->
-<section class="screen" id="ready">
+<section class="screen scroll" id="ready">
   <button class="btn alt back" id="backBtn">← Back</button>
+  <div class="wrap">
   <div class="who" id="readyWho"></div>
   <div class="clock" id="readyClock"></div>
   <button class="btn big" id="startBtn">▶ Start</button>
   <p class="err" id="micErr"></p>
+  <div class="tnotes" id="readyNotes"></div>
+  <div class="row"><button class="btn lesson" id="lessonBtn">🎓 Lesson</button></div>
+  <p class="small">Grown-ups: tap 🎓 Lesson when the teacher starts, and the iPad writes down what the teacher says.</p>
+  </div>
 </section>
 
 <!-- 3. Practicing -->
-<section class="screen" id="practice">
+<section class="screen scroll" id="practice">
+  <div class="wrap">
   <div class="who" id="pracWho"></div>
   <div class="clock" id="clock">40:00</div>
   <div class="status wait" id="status">Start playing!</div>
   <div class="bar"><div id="prog"></div></div>
   <div class="meter" title="sound level"><div id="lvl"></div><i id="thr"></i></div>
+  <div class="nudge" id="nudge"></div>
+  <div class="coach" id="coach"></div>
   <div class="row"><button class="btn alt" id="metroToggle">🥁 Metronome</button><button class="btn done" id="doneBtn">I'm done for now</button></div>
   <div class="metro" id="metro" style="display:none">
     <div class="mrow">
@@ -113,6 +167,7 @@
       <button data-b="0">Off</button><button data-b="2">2</button><button data-b="3">3</button><button data-b="4">4</button><button data-b="6">6</button>
     </div>
     <div class="mrow"><button class="mgo" id="mGo">▶ Start</button><button class="tap" id="mTap">👆 Tap tempo</button></div>
+  </div>
   </div>
 </section>
 
@@ -133,10 +188,35 @@
   <div class="row"><button class="btn big" id="keepBtn">Keep going</button><button class="btn done" id="earlyDoneBtn">Finish</button></div>
 </section>
 
+<!-- 6. Lesson: listen and write down what the teacher says -->
+<section class="screen scroll" id="lesson">
+  <div class="wrap">
+  <div class="who" id="lessonWho"></div>
+  <div class="status go" id="lessonStatus">🎤 Listening to lesson…</div>
+  <div class="ltime" id="lessonTime">0:00</div>
+  <div class="transcript" id="lessonText"></div>
+  <p class="err" id="lessonErr"></p>
+  <div class="row"><button class="btn alt" id="lessonResume" style="display:none">🎤 Tap to keep listening</button><button class="btn alt" id="lessonType" style="display:none">✍️ Type notes instead</button><button class="btn big stopbig" id="lessonEnd">■ End lesson</button></div>
+  <p class="note">Only the words are written down, on this iPad. No sound is saved. (Safari turns speech into text using Apple's dictation, like the keyboard mic.) It's polite to tell the teacher the iPad is taking notes.</p>
+  </div>
+</section>
+
+<!-- 7. Review lesson notes (grown-up) -->
+<section class="screen scroll" id="review">
+  <div class="wrap"><div class="review">
+  <h1 style="font-size:36px">Lesson notes ✏️</h1>
+  <p class="small" id="reviewSub" style="font-size:17px"></p>
+  <div id="reviewList"></div>
+  <div class="row" style="justify-content:flex-start;margin-top:12px"><button class="btn alt" id="addNote" style="font-size:20px;padding:12px 22px">+ Add a note</button><button class="btn alt" id="reparse" style="font-size:20px;padding:12px 22px">↻ Re-read the transcript</button></div>
+  <details style="margin-top:18px"><summary class="small" style="font-size:17px;cursor:pointer">Full transcript (you can fix words, then tap ↻ Re-read)</summary><textarea id="reviewText"></textarea></details>
+  <div class="row" style="justify-content:space-between"><button class="btn done" id="reviewDiscard" style="font-size:20px">Discard</button><button class="btn big" id="reviewSave" style="font-size:30px;padding:18px 44px">Save notes</button></div>
+  </div></div>
+</section>
+
 <!-- Parent settings -->
 <div class="panel" id="panel"><div class="sheet">
   <h2>Parent settings</h2>
-  <p class="small">Sound is checked live on this iPad to see if an instrument is playing. Nothing is recorded, saved or uploaded; only minutes are logged.</p>
+  <p class="small">During practice, sound is checked live on this iPad to see if an instrument is playing (and how loud and how fast). No sound is recorded or uploaded; only minutes and a short coaching summary are logged. In 🎓 Lesson mode, only the words (text) are saved, here and to the Sheet.</p>
   <label>Sensitivity: <span id="sensVal"></span></label>
   <input type="range" id="sens" min="1" max="10" step="1">
   <p class="small">Higher = soft playing counts. Lower = only clear playing counts (if talking or room noise is counting, turn it down).</p>
@@ -154,6 +234,8 @@
   <label>Celebration video address</label>
   <input type="url" id="vidUrl" placeholder="celebrate.mp4">
   <p class="small" id="queueMsg"></p>
+  <p class="small" id="lessonSyncMsg"></p>
+  <div class="row" style="justify-content:flex-start;margin-top:4px"><button class="btn alt" id="resetBase" style="font-size:16px;padding:10px 16px">Reset "usual loudness" for all kids</button></div>
   <div class="row" style="justify-content:flex-end"><button class="btn alt" id="testLogBtn" style="font-size:18px;padding:12px 20px">Send test row</button><button class="btn big" id="closePanel" style="font-size:22px;padding:14px 30px">Save</button></div>
 </div></div>
 
@@ -211,6 +293,325 @@ function createDetector(opts) {
 if (typeof module !== 'undefined') module.exports = { createDetector: createDetector };
 
 </script>
+<script id="coach-logic">
+// ===== Lesson notes + coaching logic: pure functions, no DOM/audio, unit-tested in node =====
+var NUMW = { zero:0, one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8, nine:9, ten:10, eleven:11, twelve:12,
+  thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20, thirty:30, forty:40,
+  fifty:50, sixty:60, seventy:70, eighty:80, ninety:90 };
+// "seventy two" -> "72", "a hundred and twenty" -> "120", "twice" -> "2 times"
+function wordsToDigits(s) {
+  s = s.replace(/\btwice\b/g, '2 times').replace(/\bthree times\b/g, '3 times');
+  var w = s.split(' '), out = [], i = 0;
+  while (i < w.length) {
+    var j = i, val = 0, cur = 0, any = false;
+    while (j < w.length) {
+      var t = w[j];
+      if (NUMW.hasOwnProperty(t)) { var v = NUMW[t]; if (v < 10 && cur % 10 !== 0) break; if (v >= 10 && v < 20 && cur) break; if (v >= 20 && cur % 100 !== 0) break; cur += v; any = true; j++; continue; }
+      if (t === 'hundred' && (any || (j > i && w[j - 1] === 'a') || (out.length && out[out.length - 1] === 'a'))) {
+        if (!any && out.length && out[out.length - 1] === 'a') out.pop();
+        cur = (cur || 1) * 100; any = true; j++; if (w[j] === 'and' && NUMW.hasOwnProperty(w[j + 1] || '')) j++; continue; }
+      if (t === '-' && any) { j++; continue; }
+      break;
+    }
+    if (any) { val += cur; out.push(String(val)); i = j; } else { out.push(w[i]); i++; }
+  }
+  return out.join(' ');
+}
+function normalizeText(s) {
+  s = String(s || '').toLowerCase().replace(/[\u2018\u2019\u02bc]/g, "'").replace(/[\u201c\u201d]/g, '"');
+  s = s.replace(/(\d)\s*[-\u2013\u2014]\s*(\d)/g, '$1 to $2').replace(/[,"()]/g, ' ').replace(/-/g, ' ');
+  s = s.replace(/\s+/g, ' ').trim();
+  return wordsToDigits(s);
+}
+var JOINTS = { okay: 1, ok: 1, alright: 1, now: 1, next: 1, also: 1, then: 1 }, NOBREAK = { right: 1, for: 1, just: 1, until: 1, by: 1, and: 1, from: 1, till: 1, up: 1 };
+function splitSentences(text) {
+  var parts = String(text || '').split(/(?:[.!?;]+(?=\s|$)|\n+)/), out = [];
+  parts.forEach(function (p) {
+    p = p.trim(); if (!p) return;
+    var w = p.split(/\s+/);
+    if (w.length <= 10) { out.push(p); return; }
+    // Speech-to-text often has no punctuation: break run-ons at spoken "joints" (okay, now, also, and then...).
+    var cur = [];
+    for (var i = 0; i < w.length; i++) {
+      var lw = w[i].toLowerCase().replace(/[^a-z']/g, ''), nx = (w[i + 1] || '').toLowerCase().replace(/[^a-z']/g, ''), pv = (w[i - 1] || '').toLowerCase().replace(/[^a-z']/g, '');
+      var joint = JOINTS[lw] || (lw === 'all' && nx === 'right') || (lw === 'and' && nx === 'then') || (lw === 'one' && nx === 'more') || (lw === 'another' && nx === 'thing');
+      if (joint && cur.length >= 3 && !NOBREAK[pv] && !(lw === 'then' && pv === 'and')) { out.push(cur.join(' ')); cur = []; }
+      cur.push(w[i]);
+    }
+    if (cur.length) out.push(cur.join(' '));
+  });
+  return out;
+}
+var ORD = '(?:first|second|third|fourth|fifth|sixth|last|next|top|bottom|\\d{1,2}(?:st|nd|rd|th)?)';
+var SECTION_RES = [
+  { re: /\b(?:measures?|bars?|mm)\s*(\d{1,3})(?:\s*(?:to|through|thru|and|till|until)\s*(?:measures?|bars?)?\s*(\d{1,3}))?\b/, f: function (m) { return m[2] ? 'measures ' + m[1] + '\u2013' + m[2] : 'measure ' + m[1]; } },
+  { re: new RegExp('\\b(?:the )?(' + ORD + ') line(?: of (?:the )?(' + ORD + ') page| on page (\\d{1,2}))?\\b'), f: function (m) { return (m[1].match(/\d/) ? 'line ' + m[1].replace(/\D/g, '') : m[1] + ' line') + (m[2] ? ', ' + m[2] + ' page' : m[3] ? ', page ' + m[3] : ''); } },
+  { re: /\bline (\d{1,2})\b/, f: function (m) { return 'line ' + m[1]; } },
+  { re: new RegExp('\\b(?:the )?(' + ORD + ') page\\b'), f: function (m) { return m[1] + ' page'; } },
+  { re: /\bpage (\d{1,2})\b/, f: function (m) { return 'page ' + m[1]; } },
+  { re: /\b(?:section|letter|part) ([a-f])\b/, f: function (m) { return 'section ' + m[1].toUpperCase(); } },
+  { re: /\bthe ([a-d]) section\b/, f: function (m) { return 'the ' + m[1].toUpperCase() + ' section'; } },
+  { re: /\bthe (bridge|coda|ending|end of the (?:piece|song)|beginning|intro|introduction|opening|middle (?:part|section)|chorus|refrain|cadenza|second half|first half|last part|last section|left hand part|right hand part|scale passage|run|repeat)\b/, f: function (m) { return 'the ' + m[1]; } }
+];
+function findSection(n, instrument) {
+  for (var i = 0; i < SECTION_RES.length; i++) {
+    var m = n.match(SECTION_RES[i].re); if (!m) continue;
+    if (/bridge/.test(m[0]) && (/violin|viola|cello/i.test(instrument || '') || /\b(bow|contact|closer|near|toward|towards|sounding point|over)\b/.test(n))) continue; // violin bridge = bowing
+    if (m[0] === 'the run' && !/\b(play|practice|that|this|in)\b/.test(n)) continue;
+    return { label: SECTION_RES[i].f(m), raw: m[0] };
+  }
+  return null;
+}
+function findBpm(n) {
+  var s = n;
+  SECTION_RES.slice(0, 5).forEach(function (r) { s = s.replace(new RegExp(r.re.source, 'g'), ' § '); }); // don't read "bars 12 to 16" as a tempo
+  s = s.replace(/\b\d{1,3} times\b/g, ' § ');
+  var m, v = null;
+  if ((m = s.match(/\b(?:tempo|metronome|bpm|beats per minute|speed|quarter (?:note )?(?:equals|equal|=|is|at|gets)|click)\b[^0-9§]{0,24}?(\d{2,3})\b/))) v = +m[1];
+  else if ((m = s.match(/\b(\d{2,3})\s*(?:bpm|beats per minute|beats a minute|on the metronome|on your metronome|with the metronome)\b/))) v = +m[1];
+  else if (/\b(metronome|tempo|bpm|beat|speed|slow|slower|faster|fast|click|pace)\b/.test(s) && (m = s.match(/\b(?:at|to|around|about|on|set it to|like)\s+(\d{2,3})\b/))) v = +m[1];
+  return v && v >= 30 && v <= 240 ? v : null;
+}
+var RULES = [
+  // [type, dir, regex]
+  ['dynamics', 'softer', /\b(softer|quieter|more quietly|too loud|not (?:so |as |that )?loud|less loud|gentler|gently|lighter touch|play (?:it |this |that )?lighter|pianissimo|mezzo piano|mp)\b/],
+  ['dynamics', 'softer', /\b(?:play(?:ing)?|more|very|be|marked|keep it|stay|it's|its|is|go|says|it says|that's) (?:it |this |that |(?:this|that|the) (?:part|section|line|passage|bit|phrase) |more |very )?piano\b(?! (?:lesson|teacher|bench|key|keys|piece|book|class|practice))/],
+  ['dynamics', 'louder', /\b(louder|more sound|bigger sound|more volume|more power|stronger sound|play (?:it |this |that )?(?:out|strong|stronger)|project(?: the sound| it| more)?|fortissimo|forte|mezzo forte|too (?:soft|quiet)|not (?:so |as |that )?(?:soft|quiet)|really hear (?:it|that|the melody))\b/],
+  ['dynamics', 'cresc', /\b(crescendo|cresc|get(?:ting)? louder|grow(?:ing)? louder|build(?: it)? up)\b/],
+  ['dynamics', 'decresc', /\b(decrescendo|diminuendo|dim|get(?:ting)? softer|fade(?: out| away)?|die away)\b/],
+  ['dynamics', 'accent', /\b(accents?|accented|accent the|sforzando|sfz)\b/],
+  ['dynamics', null, /\b(dynamics?|volume)\b/],
+  ['tempo', 'slower', /\b(slower|slow (?:it |this |that |things |yourself |the tempo |that tempo )?down|slow down the tempo|bring (?:the|that) tempo down|lower the tempo|back off the tempo|slowly|slow practice|practice (?:it |this |that )?slow|too fast|rushing|rush(?:ed|es)?|don't rush|not so fast|take your time|hold back|less fast)\b/],
+  ['tempo', 'faster', /\b(faster|speed (?:it |this |that )?up|too slow|dragging|drag(?:ged|s)?|pick up the (?:tempo|pace)|bring (?:the|that) tempo up|move (?:it )?along|quicker|more quickly|up to tempo|full tempo)\b/],
+  ['tempo', 'steady', /\b(steady (?:beat|tempo|pulse)|keep (?:a |the |it )?steady|even tempo|same tempo|keep the tempo|keep the beat|don't speed up|don't slow down)\b/],
+  ['rhythm', null, /\b(count(?:ing|s)?(?: out loud)?|rhythms?|on the beat|the beat|quarter notes?|eighth notes?|half notes?|whole notes?|dotted|triplets?|sixteenths?|sixteenth notes?|full value|hold (?:the|that|this) (?:note|rest)|(?:quarter|half|eighth|whole) rests?|count the rests?|the rests|subdivide|time signature|1 and 2 and)\b/],
+  ['articulation', null, /\b(staccato|legato|slur(?:s|red)?|detached|smooth(?:ly|er)?|connected|connect (?:the|those|these) notes|short(?:er)? notes|crisp(?:er)?|tenuto|marcato|separate the notes|choppy|phrasing|phrase)\b/],
+  ['bowing', null, /\b(bow(?:s|ing|ed)?|up bow|down bow|bow hold|bow speed|contact point|sounding point|string crossings?|spiccato|detache|martele|the frog|tip of the bow|(?:closer to|near|toward|towards|over) the bridge|open strings?)\b/],
+  ['intonation', null, /\b(in tune|out of tune|intonation|(?:a little|a bit|too|slightly|was|is|sounds|sounded|it's|that's|really) (?:sharp|flat)|tune (?:it|that|your)|high 2|low 2|high 3|low 1)\b/],
+  ['fingering', null, /\b(finger(?:ing|ings)?(?! position)|thumb(?! under| position)|pinky|use (?:your )?(?:[1-5])(?:st|nd|rd|th)? (?:finger)?|(?:first|second|third|fourth|fifth|[1-5](?:st|nd|rd|th)) finger)\b/],
+  ['hand', null, /\b(hand position|curved fingers|curve (?:your|those|the) fingers|round(?:ed)? (?:hand|fingers)|wrist|hand shape|(?:first|second|third|fourth|fifth|1st|2nd|3rd|4th|5th|half) position|shift(?:ing|s)?|flat fingers|collapse|collapsing|knuckles?|thumb under|thumb position|left hand frame|relax(?:ed)? (?:your )?hands?|tension in your hands?)\b/],
+  ['posture', null, /\b(posture|sit (?:up|tall|straight)|sitting (?:up|tall)|stand (?:up )?(?:tall|straight)|back straight|straight back|shoulders?|slouch(?:ing)?|bench|feet flat|chin(?: rest)?|scroll up|head up|elbows?|violin up|relax (?:your )?(?:arm|neck)|neck)\b/],
+  ['pedal', null, /\b(pedal(?:ing|s)?|sustain pedal|half pedal|lift the pedal|clear the pedal)\b/]
+];
+var HOMEWORK_RE = /\b(this week|for next (?:time|week|lesson)|next (?:time|week)|before (?:our|the|your) next lesson|at home|homework|every day|each day|daily|assignment|over the week|during the week|i want you to practice|i want you to work on|your goal)\b/;
+var KEY_RE = /\b(really|very important|most important|important|make sure|remember|don't forget|focus on|pay attention|main thing|big thing|priority|always|never|biggest)\b/;
+var PRAISE_RE = /\b(?:was|were|that's|it's|that is|much|so much|way) (?:much |a lot |a little |way |so much )?(?:louder|softer|quieter|slower|faster|better|smoother|cleaner|nicer)\b/;
+var PRAISE_WORD = /\b(good|great|nice|perfect|excellent|beautiful|well done|awesome|wonderful|lovely|better|that's it|exactly|yes)\b/;
+var REPEAT_RE = /\b(\d{1,2}) times(?:\s+(?:in a row|a day|each day|every day|per day|daily))?\b/;
+var ICON = { dynamics: '🔊', tempo: '⏱️', rhythm: '🥁', articulation: '🎵', bowing: '🎻', intonation: '🎯', fingering: '🖐️', hand: '👐', posture: '🪑', pedal: '🦶', repeat: '🔁', general: '📝' };
+var DIR_ICON = { louder: '🔊', softer: '🤫', cresc: '📈', decresc: '📉', accent: '❗', slower: '🐢', faster: '🐇', steady: '⏱️', target: '⏱️' };
+var TYPE_LABEL = { dynamics: 'Loud & soft', tempo: 'Tempo', rhythm: 'Counting & rhythm', articulation: 'Articulation', bowing: 'Bowing', intonation: 'In tune', fingering: 'Fingering', hand: 'Hand position', posture: 'Posture', pedal: 'Pedal', repeat: 'Repeat it', general: 'Note' };
+var PRIORITY = ['rhythm', 'articulation', 'bowing', 'intonation', 'fingering', 'hand', 'posture', 'pedal'];
+function cleanSentence(s) {
+  s = String(s).trim().replace(/^(?:(?:um+|uh+|so|okay|ok|alright|all right|and|now|well|yeah|right|good|great|nice)[\s,]+)+/i, '');
+  s = s.replace(/^(?:i want you to|i'd like you to|i would like you to|you need to|you have to|you should|you want to|let's|let us|can you|could you|try to|please)\s+/i, '');
+  s = s.replace(/\s+/g, ' ').replace(/[\s,]+$/, '');
+  if (s.length > 90) s = s.slice(0, 87).replace(/\s+\S*$/, '') + '…';
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+function noteTitle(n) {
+  var sec = n.section ? ' — ' + n.section : '';
+  if (n.type === 'dynamics') {
+    var t = { louder: 'Play louder', softer: 'Play softer', cresc: 'Get louder little by little (crescendo)', decresc: 'Get softer little by little (diminuendo)', accent: 'Make the accents pop' }[n.dir];
+    if (t) return t + sec;
+  }
+  if (n.type === 'tempo') {
+    var b = n.bpm ? 'aim for ' + n.bpm + ' on the metronome' : '';
+    var d = { slower: 'Slow down', faster: 'Speed up a little', steady: 'Keep a steady beat' }[n.dir];
+    if (d && b) return d + ' — ' + b + sec;
+    if (b) return 'Tempo: ' + n.bpm + ' on the metronome' + sec;
+    if (d) return d + sec;
+  }
+  if (n.type === 'repeat') return 'Play it ' + n.reps + ' times' + (n.perDay ? ' every day' : '') + sec;
+  return cleanSentence(n.source);
+}
+var _nid = 0;
+function newNoteId() { _nid = (_nid + 1) % 1e6; return 'n' + Date.now().toString(36) + _nid.toString(36); }
+// Main entry: transcript text -> array of notes
+function parseLessonNotes(transcript, opts) {
+  opts = opts || {};
+  var notes = [], byKey = {};
+  splitSentences(transcript).forEach(function (sent) {
+    var n = normalizeText(sent); if (n.split(' ').length < 2) return;
+    var section = findSection(n, opts.instrument), bpm = findBpm(n);
+    var homework = HOMEWORK_RE.test(n), key = KEY_RE.test(n) || homework;
+    var rm = n.match(REPEAT_RE), reps = rm && +rm[1] >= 2 && +rm[1] <= 50 && /\b(play|practice|do|repeat|go over|run|times in a row|a day|each day|every day|daily)\b/.test(n) ? +rm[1] : null;
+    var perDay = reps && /\b(a day|each day|every day|per day|daily)\b/.test(n);
+    var praise = PRAISE_RE.test(n) && PRAISE_WORD.test(n) && !/\b(too|more|not|keep|even|still|try|need|should)\b/.test(n.replace(PRAISE_RE, ''));
+    var found = {};
+    RULES.forEach(function (r) {
+      var m = n.match(r[2]); if (!m) return;
+      if (r[0] === 'bowing' && /\btake a bow\b/.test(n)) return;
+      if (r[0] === 'fingering' && /\b(?:curved?|round(?:ed)?|flat|curve your) fingers\b/.test(n) && !/\bfinger(?:ing)?s? (?:number|\d)|\d(?:st|nd|rd|th)? finger|\buse \d/.test(n)) return;
+      if (r[0] === 'dynamics' && r[1] === null && /\bvolume\b/.test(n) && found.dynamics) return;
+      if (!found[r[0]] || (found[r[0]].dir === null && r[1])) found[r[0]] = { dir: r[1], match: m[0] };
+    });
+    if (praise) { delete found.dynamics; delete found.tempo; if (!homework && !Object.keys(found).length) return; }
+    if (bpm && !found.tempo) found.tempo = { dir: 'target', match: String(bpm) };
+    var made = [];
+    function add(type, dir) {
+      var note = { id: newNoteId(), type: type, dir: dir || null, section: section ? section.label : null, bpm: type === 'tempo' ? bpm : null,
+        reps: reps, perDay: !!perDay, homework: homework, key: key, source: sent.trim(), count: 1, check: false, done: false };
+      note.check = (type === 'dynamics' && (dir === 'louder' || dir === 'softer')) || (type === 'tempo' && !!bpm);
+      note.tags = [];
+      Object.keys(found).forEach(function (t) { if (t !== type) note.tags.push(t); });
+      if (section) note.tags.push('section'); if (homework) note.tags.push('homework'); if (reps) note.tags.push('repeat');
+      note.text = noteTitle(note);
+      var k = [type, note.dir, note.section, note.bpm].join('|');
+      if (byKey[k] && type !== 'general') { var o = byKey[k]; o.count++; o.key = true; o.homework = o.homework || homework; o.reps = o.reps || reps; if (o.sources.length < 3) o.sources.push(note.source); return; }
+      note.sources = [note.source]; byKey[k] = note; notes.push(note); made.push(note);
+    }
+    if (found.dynamics) add('dynamics', found.dynamics.dir);
+    if (found.tempo) add('tempo', found.tempo.dir);
+    var rest = PRIORITY.filter(function (t) { return found[t]; });
+    if (rest.length) add(rest[0], null);
+    if (!found.dynamics && !found.tempo && !rest.length) {
+      if (reps) add('repeat', null);
+      else if ((homework || section) && /\b(work on|practice|play|look at|learn|memorize|review|go over|start|listen to|try|finish|prepare)\b/.test(n)) add('general', null);
+    }
+  });
+  // Key points first, then the order the teacher said them.
+  return notes.map(function (n, i) { n._i = i; return n; }).sort(function (a, b) { return (b.key - a.key) || (a._i - b._i); }).map(function (n) { delete n._i; return n; });
+}
+// Which notes can the microphone check? Conflicting loud/soft notes cancel each other.
+function activeChecks(notes) {
+  var dyn = (notes || []).filter(function (n) { return n.check && n.type === 'dynamics' && (n.dir === 'louder' || n.dir === 'softer'); });
+  var dirs = {}; dyn.forEach(function (n) { dirs[n.dir] = n; });
+  var loud = Object.keys(dirs).length === 1 ? dyn[0] : null;
+  var tempo = (notes || []).filter(function (n) { return n.check && n.type === 'tempo' && n.bpm; })[0] || null;
+  return { loud: loud, tempo: tempo };
+}
+
+// ---------- Loudness coach ----------
+// Feed once per ~100 ms detector frame. "active" = an instrument note is sounding right now
+// (detector says playing AND this frame is above the threshold AND not a metronome click).
+function levelToDb(level) { return 20 * Math.log10(Math.max(level, 1e-6)); }
+function createLoudCoach(o) {
+  o = Object.assign({ dir: null, baseline: null, tauSec: 4, settleSec: 6, holdSec: 4, cooldownSec: 45, showSec: 7,
+    minBaselineSec: 90, underDb: 0.5, wayUnderDb: 2, metDb: 1.5 }, o || {});
+  var smooth = null, activeSecs = 0, sessSum = 0, sessSecs = 0, condSecs = 0, lastNudge = -1e9, nudgeUntil = -1e9, nudgeMsg = '',
+    nudges = 0, metSecs = 0, checkedSecs = 0, state = 'idle';
+  function ready() { return !!(o.baseline && o.baseline.secs >= o.minBaselineSec); }
+  function frame(level, active, nowSec, dt) {
+    dt = dt || 0.1;
+    if (active) {
+      var db = levelToDb(level), a = 1 - Math.exp(-dt / o.tauSec);
+      smooth = smooth === null ? db : smooth + a * (db - smooth);
+      activeSecs += dt; sessSum += db * dt; sessSecs += dt;
+    }
+    var out = { state: 'idle', diff: null, smooth: smooth, nudge: nowSec < nudgeUntil ? nudgeMsg : '', fired: false };
+    if (!o.dir) { out.state = 'off'; return out; }
+    if (!ready()) { out.state = 'learning'; return out; }
+    if (activeSecs < o.settleSec || smooth === null) { out.state = 'listening'; return out; }
+    var diff = smooth - o.baseline.db; out.diff = diff;
+    var sgn = o.dir === 'louder' ? 1 : -1, rel = diff * sgn;       // >0 = doing what the teacher asked
+    if (rel >= o.metDb) state = 'met'; else if (rel < -o.wayUnderDb) state = 'way'; else if (rel < o.underDb) state = 'under'; else state = 'close';
+    if (active) { checkedSecs += dt; if (state === 'met') metSecs += dt; }
+    if (active && (state === 'under' || state === 'way')) condSecs += dt; else if (active) condSecs = 0;
+    if (condSecs >= o.holdSec && nowSec - lastNudge >= o.cooldownSec) {
+      lastNudge = nowSec; nudgeUntil = nowSec + o.showSec; nudges++; condSecs = 0; out.fired = true;
+      nudgeMsg = o.dir === 'louder'
+        ? (state === 'way' ? 'Teacher said louder — you’re playing softer than usual 🔊' : 'Teacher said louder — try a bit more sound than usual 🔊')
+        : (state === 'way' ? 'Teacher said softer — you’re playing louder than usual 🤫' : 'Teacher said softer — try it a little gentler than usual 🤫');
+    }
+    out.state = state; out.nudge = nowSec < nudgeUntil ? nudgeMsg : '';
+    return out;
+  }
+  function summary() {
+    return { dir: o.dir, nudges: nudges, metPct: checkedSecs > 0 ? Math.round(metSecs / checkedSecs * 100) : null, checkedSecs: Math.round(checkedSecs),
+      sessDb: sessSecs > 0 ? sessSum / sessSecs : null, sessSecs: sessSecs, learning: !ready() };
+  }
+  return { frame: frame, summary: summary, ready: ready, setDir: function (d) { o.dir = d; } };
+}
+// Blend this session into the kid's usual level. Sessions with a loud/soft note count less,
+// so the "usual" level doesn't simply chase the teacher's request.
+function updateBaseline(base, sessDb, sessSecs, hasDynNote) {
+  if (sessDb === null || sessDb === undefined || !(sessSecs >= 20)) return base;
+  var w = sessSecs * (hasDynNote ? 0.3 : 1);
+  if (!base || !base.secs) return { db: sessDb, secs: Math.min(w, 1200), sessions: 1 };
+  var bw = Math.min(base.secs, 1200);
+  return { db: (base.db * bw + sessDb * w) / (bw + w), secs: Math.min(bw + w, 1200), sessions: (base.sessions || 0) + 1 };
+}
+
+// ---------- Onset detector (energy rise) ----------
+// processBuffer(samples, t0, sampleRate, isGated, active): splits into ~10 ms hops, returns onset times (seconds).
+// Hops that may contain a metronome click are skipped and reported through o.onGate(t0, t1).
+function createOnsetDetector(o) {
+  o = Object.assign({ hop: 512, riseDb: 6, minAboveDb: 12, refractory: 0.1, lookback: 3, onGate: null }, o || {});
+  var hist = [], noiseDb = null, lastOnset = -1e9, prevRise = 0;
+  function processBuffer(x, t0, sr, isGated, active) {
+    var on = [], hop = o.hop, hopSec = hop / sr;
+    for (var s = 0; s + hop <= x.length; s += hop) {
+      var e = 0; for (var i = s; i < s + hop; i++) e += x[i] * x[i];
+      var db = 10 * Math.log10(e / hop + 1e-12), t = t0 + (s + hop) / sr;
+      if (noiseDb === null) noiseDb = db;
+      noiseDb = db < noiseDb ? noiseDb + 0.3 * (db - noiseDb) : noiseDb + 0.0005 * (db - noiseDb);
+      var mn = Infinity; for (var k = 0; k < hist.length; k++) mn = Math.min(mn, hist[k]);
+      var rise = hist.length ? db - mn : 0;
+      hist.push(db); if (hist.length > o.lookback) hist.shift();
+      if (isGated && isGated(t - hopSec, t)) { prevRise = 0; if (o.onGate) o.onGate(t - hopSec, t); continue; }
+      if (active !== false && rise > o.riseDb && prevRise <= o.riseDb && db > noiseDb + o.minAboveDb && t - lastOnset > o.refractory) { on.push(t - hopSec / 2); lastOnset = t; }
+      prevRise = rise;
+    }
+    return on;
+  }
+  return { processBuffer: processBuffer, reset: function () { hist = []; lastOnset = -1e9; prevRise = 0; } };
+}
+// ---------- Tempo estimate: inter-onset-interval histogram, gap-aware ----------
+// Each interval between two onsets "fits" a beat length P if it is ~1 beat, or ~2-4 beats where the
+// missing notes would have landed inside a metronome-click gate (we couldn't hear them), or (half credit)
+// ~2-4 beats otherwise (a soft note we missed / a longer note). The P with the best fit wins.
+function createTempoEstimator(o) {
+  o = Object.assign({ windowSec: 12, minIois: 8, minSingles: 4, minConf: 0.75, tol: 0.06, pMin: 0.2, pMax: 2.0 }, o || {});
+  var onsets = [], gates = [], last = null;
+  function add(t) { onsets.push(t); }
+  function addGate(t0, t1) { var g = gates[gates.length - 1]; if (g && t0 <= g[1] + 0.012) g[1] = Math.max(g[1], t1); else gates.push([t0, t1]); }
+  function inGate(t, slack) { for (var i = gates.length - 1; i >= 0; i--) { var g = gates[i]; if (g[1] + slack < t) { if (g[1] < t - 3) break; continue; } if (g[0] - slack <= t) return true; } return false; }
+  function credit(d, t0, P) {
+    var k = Math.round(d / P); if (k < 1 || k > 4 || Math.abs(d / (k * P) - 1) > o.tol) return 0;
+    if (k === 1) return 1;
+    for (var j = 1; j < k; j++) if (!inGate(t0 + j * (d / k), o.tol * P + 0.02)) return 0.5;
+    return 1;
+  }
+  function estimate(now) {
+    while (onsets.length && onsets[0] < now - o.windowSec) onsets.shift();
+    while (gates.length && gates[0][1] < now - o.windowSec - 3) gates.shift();
+    var iv = [];
+    for (var i = 1; i < onsets.length; i++) { var d = onsets[i] - onsets[i - 1]; if (d >= 0.15 && d <= 2.6) iv.push([d, onsets[i - 1]]); }
+    if (iv.length < o.minIois) { last = null; return null; }
+    var best = -1, bestP = 0;
+    for (var lp = Math.log(o.pMin); lp <= Math.log(o.pMax); lp += 0.004) {
+      var P = Math.exp(lp), sc = 0;
+      for (var j = 0; j < iv.length; j++) sc += credit(iv[j][0], iv[j][1], P);
+      if (sc > best + 1e-9) { best = sc; bestP = P; }
+    }
+    // Refine with the intervals that are a single beat.
+    var singles = iv.filter(function (x) { return Math.abs(x[0] / bestP - 1) <= o.tol; }).map(function (x) { return x[0]; }).sort(function (a, b) { return a - b; });
+    var Pr = singles.length ? singles[Math.floor(singles.length / 2)] : bestP;
+    var conf = best / iv.length;
+    var bpm = 60 / Pr; while (bpm > 200) bpm /= 2; while (bpm < 40) bpm *= 2;
+    var stable = last && Math.abs(bpm / last - 1) <= 0.05;
+    last = bpm;
+    var ok = conf >= o.minConf && singles.length >= o.minSingles;
+    return { bpm: Math.round(bpm), raw: 60 / Pr, confidence: Math.round(conf * 100) / 100, n: iv.length, singles: singles.length, confident: !!(ok && stable) };
+  }
+  return { add: add, addGate: addGate, estimate: estimate, reset: function () { onsets = []; gates = []; last = null; }, count: function () { return onsets.length; } };
+}
+// Compare an estimate with the teacher's target. Pick the octave nearest the target
+// (eighth notes at 84 look like 168), so we never call a subdivision "way too fast".
+function compareTempo(est, target, tol) {
+  if (!est || !est.confident || !target) return null;
+  tol = tol || 0.07;
+  var c = [est.bpm, est.bpm / 2, est.bpm * 2, est.bpm / 3, est.bpm * 3].filter(function (v) { return v >= 30 && v <= 260; });
+  c.sort(function (a, b) { return Math.abs(Math.log(a / target)) - Math.abs(Math.log(b / target)); });
+  var you = Math.round(c[0]), r = you / target - 1;
+  return { you: you, target: target, status: Math.abs(r) <= tol ? 'ok' : r > 0 ? 'fast' : 'slow' };
+}
+if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLessonNotes, normalizeText: normalizeText, splitSentences: splitSentences,
+  findBpm: findBpm, findSection: findSection, activeChecks: activeChecks, createLoudCoach: createLoudCoach, updateBaseline: updateBaseline,
+  levelToDb: levelToDb, createOnsetDetector: createOnsetDetector, createTempoEstimator: createTempoEstimator, compareTempo: compareTempo,
+  noteTitle: noteTitle, ICON: ICON, DIR_ICON: DIR_ICON, TYPE_LABEL: TYPE_LABEL };
+</script>
 <script>
 (function () {
   // ---------- Config ----------
@@ -235,7 +636,8 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
   // ---------- Detector + microphone ----------
   var det = createDetector({ sensitivity: store.get('sens', 5), quietMs: store.get('quietMs', 2500) });
   var savedFloor = store.get('floor', null); if (savedFloor) det.calibrate(savedFloor);
-  var audio = null; // {ctx, stream, analyser, buf}
+  var audio = null; // {ctx, stream, analyser, buf, sp}
+  var onAudioBlock = null; // set during a coached session: (samples, startTime, sampleRate)
   function startMic() {
     if (audio) return Promise.resolve();
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return Promise.reject(new Error('This page must be opened over https:// to use the microphone.'));
@@ -246,13 +648,21 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
         var hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 60;   // ignore rumble / thumps
         var analyser = ctx.createAnalyser(); analyser.fftSize = 2048;
         src.connect(hp); hp.connect(analyser);  // never connected to speakers, never recorded
-        audio = { ctx: ctx, stream: stream, analyser: analyser, buf: new Float32Array(analyser.fftSize) };
+        // Small block tap for tempo (note-onset) detection. Its output goes through a muted gain: silent, nothing stored.
+        var sp = null;
+        try { sp = (ctx.createScriptProcessor || ctx.createJavaScriptNode).call(ctx, 1024, 1, 1); } catch (e) { sp = null; }
+        if (sp) {
+          var mute = ctx.createGain(); mute.gain.value = 0; hp.connect(sp); sp.connect(mute); mute.connect(ctx.destination);
+          sp.onaudioprocess = function (ev) { if (onAudioBlock) { var b = ev.inputBuffer; try { onAudioBlock(b.getChannelData(0), ctx.currentTime - b.duration, b.sampleRate); } catch (e) {} } };
+        }
+        audio = { ctx: ctx, stream: stream, analyser: analyser, buf: new Float32Array(analyser.fftSize), sp: sp };
         if (ctx.state === 'suspended') ctx.resume();
       });
   }
   function stopMic() {
     metro.stop();
-    if (!audio) return; audio.stream.getTracks().forEach(function (t) { t.stop(); }); try { audio.ctx.close(); } catch (e) {} audio = null;
+    onAudioBlock = null;
+    if (!audio) return; if (audio.sp) { audio.sp.onaudioprocess = null; try { audio.sp.disconnect(); } catch (e) {} } audio.stream.getTracks().forEach(function (t) { t.stop(); }); try { audio.ctx.close(); } catch (e) {} audio = null;
   }
   // ---------- Metronome (Web Audio, lookahead-scheduled, shares the mic's AudioContext) ----------
   var metro = (function () {
@@ -305,6 +715,13 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
       }
       return false;
     }
+    // For the tempo estimator: could a click (or its echo) be in the audio between t0 and t1 (AudioContext time)?
+    function clickNear(t0, t1) {
+      if (!running || !ctx) return false;
+      var lat = (ctx.outputLatency || 0) + (ctx.baseLatency || 0);
+      for (var i = 0; i < clicks.length; i++) { var c = clicks[i] + lat; if (t1 >= c - 0.03 && t0 <= c + 0.15) return true; }
+      return false;
+    }
     function ui() {
       if (!$('mBpm')) return;
       $('mBpm').textContent = bpm; $('mSlider').value = bpm;
@@ -318,7 +735,7 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
       if (taps.length >= 2) { var s = 0; for (var i = 1; i < taps.length; i++) s += taps[i] - taps[i - 1]; setBpm(60000 / (s / (taps.length - 1))); }
     }
     return { start: start, stop: stop, toggle: function () { running ? stop() : start(); }, setBpm: setBpm, getBpm: function () { return bpm; },
-      setBeats: setBeats, tap: tap, gated: gated, ui: ui, isRunning: function () { return running; } };
+      setBeats: setBeats, tap: tap, gated: gated, clickNear: clickNear, ui: ui, isRunning: function () { return running; } };
   })();
   function readLevel() {
     if (!audio) return 0;
@@ -336,7 +753,7 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
   var wake = null;
   function keepAwake() { try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(function (w) { wake = w; }).catch(function () {}); } catch (e) {} }
   function releaseAwake() { try { wake && wake.release(); } catch (e) {} wake = null; }
-  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible' && session) keepAwake(); });
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible' && (session || lesson)) { keepAwake(); if (lesson && lesson.active && !lesson.rec) recStart(); } });
 
   // ---------- Session ----------
   var kid = null, session = null, tick = null;
@@ -345,9 +762,15 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
     KIDS.forEach(function (k) {
       var b = document.createElement('button'); b.className = 'kid'; b.style.background = k.color;
       b.innerHTML = '<span class="emoji">' + k.emoji + '</span><span class="name">' + k.name + '</span><span class="what">' + k.instrument + ' · ' + k.minutes + ' min</span>';
-      b.onclick = function () { kid = k; $('readyWho').textContent = k.emoji + ' ' + k.name + ' · ' + k.instrument; $('readyClock').textContent = fmt(k.minutes * 60); $('micErr').textContent = ''; show('ready'); };
+      b.onclick = function () { openKid(k); };
       box.appendChild(b);
     });
+    renderDraftBar();
+  }
+  function openKid(k) {
+    kid = k; $('readyWho').textContent = k.emoji + ' ' + k.name + ' · ' + k.instrument; $('readyClock').textContent = fmt(k.minutes * 60); $('micErr').textContent = '';
+    renderNotes(k); show('ready'); $('ready').scrollTop = 0;
+    pullLessons(k).then(function (changed) { if (changed && kid === k && $('ready').classList.contains('on')) renderNotes(k); });
   }
   function begin() {
     $('micErr').textContent = '';
@@ -355,6 +778,7 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
       det.reset();
       session = { kid: kid, startedAt: new Date(), played: 0, last: performance.now(), done: false };
       $('pracWho').textContent = kid.emoji + ' ' + kid.name;
+      setupCoach(session);
       keepAwake(); show('practice'); render(false);
       tick = setInterval(step, 100);
     }).catch(function (e) {
@@ -365,6 +789,7 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
     var now = performance.now(), dt = Math.min(0.5, (now - session.last) / 1000); session.last = now;
     var r = det.update(readLevel(), now, metro.gated(audio ? audio.analyser.fftSize / audio.ctx.sampleRate : 0.05));
     if (r.playing) session.played += dt;
+    coachStep(r, now, dt);
     meter($('lvl'), $('thr'), r); if ($('panel').classList.contains('on')) meter($('lvl2'), $('thr2'), r);
     render(r.playing);
     if (session.played >= session.kid.minutes * 60) finish(true);
@@ -382,6 +807,7 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
   function finish(completed) {
     if (!session || session.done) return;
     pauseTick(); session.done = true; stopMic(); releaseAwake();
+    endCoach(session);
     logSession(session, completed);
     if (completed) celebrate(); else { show('pick'); }
     session = null;
@@ -403,7 +829,8 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
       start: pad(d.getHours()) + ':' + pad(d.getMinutes()),
       kid: s.kid.name, instrument: s.kid.instrument, target: s.kid.minutes,
       actual: Math.round(s.played / 60 * 10) / 10, completed: completed ? 'Yes' : 'No',
-      length: Math.round((end - d) / 60000 * 10) / 10, id: d.getTime() + '-' + s.kid.name
+      length: Math.round((end - d) / 60000 * 10) / 10, id: d.getTime() + '-' + s.kid.name,
+      coaching: s.coaching || ''
     };
     var q = store.get('queue', []); q.push(row); store.set('queue', q); flush();
   }
@@ -417,7 +844,7 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
       .catch(function () { /* stays queued; retried later */ });
   }
   function updateQueueMsg() { var n = store.get('queue', []).length; $('queueMsg').textContent = n ? n + ' session(s) waiting to be sent to the Sheet.' : (logUrl() ? 'All sessions sent.' : 'No Sheet address set yet; sessions are kept on this iPad until one is added.'); }
-  window.addEventListener('online', flush); setInterval(flush, 5 * 60 * 1000);
+  window.addEventListener('online', function () { flush(); flushLessons(); }); setInterval(function () { flush(); flushLessons(); }, 5 * 60 * 1000);
 
   // ---------- Celebration ----------
   var confettiOn = false;
@@ -453,12 +880,12 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
     $('sens').value = det.get('sensitivity'); $('sensVal').textContent = det.get('sensitivity');
     $('quiet').value = det.get('quietMs') / 1000; $('quietVal').textContent = det.get('quietMs') / 1000;
     $('logUrl').value = store.get('logUrl', '') || logUrl(); $('vidUrl').value = store.get('vidUrl', '');
-    updateQueueMsg(); $('panel').classList.add('on');
+    updateQueueMsg(); updateLessonMsg(); checkServer(true); $('panel').classList.add('on');
     if (!session) startMic().then(function () { panelMic = true; (function live() { if (!panelMic || !audio) return; meter($('lvl2'), $('thr2'), det.update(readLevel(), performance.now())); setTimeout(live, 100); })(); }).catch(function () {});
   }
   function closePanel() {
     store.set('logUrl', $('logUrl').value.trim()); store.set('vidUrl', $('vidUrl').value.trim());
-    $('panel').classList.remove('on'); if (panelMic) { panelMic = false; if (!session) stopMic(); det.reset(); } flush();
+    $('panel').classList.remove('on'); if (panelMic) { panelMic = false; if (!session) stopMic(); det.reset(); } srvV2 = null; flush(); flushLessons();
   }
   var g = $('gear');
   g.addEventListener('pointerdown', function () { holdT = setTimeout(openPanel, 1000); });
@@ -471,6 +898,7 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
   };
   $('testLogBtn').onclick = function () { store.set('logUrl', $('logUrl').value.trim()); logSession({ kid: { name: 'TEST', instrument: 'Test', minutes: 0 }, startedAt: new Date(), played: 0 }, false); $('queueMsg').textContent = 'Test row sent — check the Sheet (delete the TEST row after).'; };
   $('closePanel').onclick = closePanel;
+  $('resetBase').onclick = function () { KIDS.forEach(function (k) { store.set('loudBase.' + k.name, null); }); this.textContent = 'Done ✓ (it re-learns over the next sessions)'; };
 
   // ---------- Wire up ----------
   $('backBtn').onclick = function () { show('pick'); };
@@ -494,8 +922,387 @@ if (typeof module !== 'undefined') module.exports = { createDetector: createDete
   $('earlyDoneBtn').onclick = function () { session.done = false; finish(false); };
   $('finishBtn').onclick = endCelebration;
   $('soundBtn').onclick = function () { var v = $('vid'); v.muted = false; v.currentTime = 0; v.play(); this.style.display = 'none'; };
-  renderKids(); flush();
-  window.__wpt = { metro: metro, det: det, KIDS: KIDS, logSession: logSession, getSession: function () { return session; } }; // for testing
+  // ======================= Lessons: storage + sync with the Sheet =======================
+  function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function clip(t, n) { t = String(t || ''); return t.length > n ? t.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : t; }
+  function dayStr(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function niceDate(l) { var d = new Date(l.ts || Date.parse(l.date) || Date.now()); try { return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }); } catch (e) { return l.date || ''; } }
+  function lessonsOf(name) { return store.get('lessons.' + name, []); }
+  function saveLessonsOf(name, arr) { arr.sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); }); store.set('lessons.' + name, arr.slice(0, 12)); }
+  function latestLesson(name) { var a = lessonsOf(name).filter(function (l) { return l.notes && l.notes.length; }); return a[0] || null; }
+  function compactNote(n) { return { id: n.id, type: n.type, dir: n.dir || null, text: n.text, section: n.section || null, bpm: n.bpm || null, reps: n.reps || null,
+    perDay: !!n.perDay, homework: !!n.homework, key: !!n.key, check: !!n.check, source: clip(n.source || '', 300) }; }
+  var srvV2 = null, srvCheckedAt = 0;
+  // Does the deployed Apps Script know about lessons? (new Code.gs answers {version: 2}; the old one doesn't)
+  function checkServer(force) {
+    var url = logUrl();
+    if (!url || !window.fetch || navigator.onLine === false) return Promise.resolve(false);
+    if (!force && srvV2 !== null && Date.now() - srvCheckedAt < 10 * 60000) return Promise.resolve(srvV2);
+    return fetch(url + (url.indexOf('?') < 0 ? '?' : '&') + 'ping=1').then(function (r) { return r.json(); })
+      .then(function (j) { srvV2 = !!(j && j.ok && j.version >= 2); srvCheckedAt = Date.now(); updateLessonMsg(); return srvV2; })
+      .catch(function () { return false; });
+  }
+  function queueLesson(item) {
+    item.v = Date.now();
+    var q = store.get('lessonQueue', []).filter(function (x) { return x.id !== item.id; }); q.push(item); store.set('lessonQueue', q);
+    flushLessons();
+  }
+  var lessonFlushing = false;
+  function flushLessons() {
+    updateLessonMsg();
+    var q = store.get('lessonQueue', []);
+    if (!q.length || lessonFlushing || !logUrl()) return Promise.resolve();
+    lessonFlushing = true;
+    return checkServer().then(function (v2) {
+      if (!v2) return;   // old script still deployed: keep lessons on this iPad, nothing lost
+      var url = logUrl();
+      return q.reduce(function (p, item) {
+        return p.then(function () {
+          return fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(item) }).then(function () {
+            store.set('lessonQueue', store.get('lessonQueue', []).filter(function (x) { return !(x.id === item.id && x.v === item.v); }));
+            if (!item.deleted) { var ls = lessonsOf(item.kid); ls.forEach(function (l) { if (l.id === item.id) { l.synced = true; l.syncedAt = Date.now(); } }); saveLessonsOf(item.kid, ls); }
+          });
+        });
+      }, Promise.resolve());
+    }).catch(function () {}).then(function () { lessonFlushing = false; updateLessonMsg(); });
+  }
+  // Bring in notes saved on another device (needs the new Code.gs). Local edits not yet sent win.
+  function pullLessons(k) {
+    var reqStart = Date.now();
+    return checkServer().then(function (v2) {
+      if (!v2) return false;
+      return fetch(logUrl() + (logUrl().indexOf('?') < 0 ? '?' : '&') + 'kid=' + encodeURIComponent(k.name)).then(function (r) { return r.json(); }).then(function (j) {
+        if (!j || !j.ok || !j.lessons) return false;
+        var local = lessonsOf(k.name), pending = {}, byId = {}, srvIds = {}, oldest = Infinity, before = JSON.stringify(local);
+        store.get('lessonQueue', []).forEach(function (x) { pending[x.id] = 1; });
+        local.forEach(function (l) { byId[l.id] = l; });
+        j.lessons.forEach(function (sl) {
+          if (!sl || !sl.id) return;
+          var ts = parseInt(sl.id, 10) || Date.parse(sl.date) || 0; srvIds[sl.id] = 1; oldest = Math.min(oldest, ts);
+          if (pending[sl.id]) return;
+          var l = byId[sl.id];
+          if (l) { l.notes = sl.notes || l.notes; l.synced = true; l.syncedAt = l.syncedAt || 1; }
+          else local.push({ id: sl.id, ts: ts, date: sl.date, kid: k.name, instrument: sl.instrument || k.instrument, notes: sl.notes || [], transcript: '', synced: true, syncedAt: 1 });
+        });
+        // Deleted on another device? Only if it was synced well before this request (a lesson saved seconds ago may not have reached the Sheet yet).
+        local = local.filter(function (l) { return !(l.synced && (l.syncedAt || 0) < reqStart - 60000 && !srvIds[l.id] && !pending[l.id] && (j.lessons.length < (j.limit || 10) || l.ts >= oldest)); });
+        saveLessonsOf(k.name, local);
+        return JSON.stringify(lessonsOf(k.name)) !== before;
+      });
+    }).catch(function () { return false; });
+  }
+  function updateLessonMsg() {
+    var el = $('lessonSyncMsg'); if (!el) return;
+    var n = store.get('lessonQueue', []).length;
+    if (!logUrl()) el.textContent = 'Lesson notes are saved on this iPad.';
+    else if (n && srvV2 === false) el.textContent = n + ' lesson(s) saved on this iPad. To also save them to the Sheet (and other devices), update the Apps Script to the new Code.gs and deploy a new version.';
+    else if (n) el.textContent = n + ' lesson(s) waiting to be sent to the Sheet.';
+    else if (srvV2) el.textContent = 'Lesson notes sync with the Sheet ✓';
+    else el.textContent = 'Lesson notes are saved on this iPad (the Sheet script has not been updated for lessons yet).';
+  }
+
+  // ======================= Teacher's notes (kid view) =======================
+  function noteIcon(n) { return (n.dir && DIR_ICON[n.dir]) || ICON[n.type] || '📝'; }
+  function noteCard(n) {
+    var pills = (n.key ? '<span class="pill k">⭐ Key point</span>' : '') + (n.homework ? '<span class="pill h">🏠 Practice at home</span>' : '') +
+      (n.reps && n.type !== 'repeat' ? '<span class="pill">🔁 ' + n.reps + ' times' + (n.perDay ? ' a day' : '') + '</span>' : '');
+    return '<div class="tn' + (n.key ? ' key' : '') + '"><div class="ic">' + noteIcon(n) + '</div><div><div class="tx">' + esc(n.text) + '</div>' +
+      (pills ? '<div>' + pills + '</div>' : '') + (n.source ? '<div class="q">Teacher said: “' + esc(clip(n.source, 150)) + '”</div>' : '') + '</div></div>';
+  }
+  function lessonBlock(l, latest) {
+    return '<div class="lessonhd"><span>' + (latest ? 'Latest lesson · ' : '') + esc(niceDate(l)) + '</span><button data-edit="' + esc(l.id) + '">✏️ Edit</button></div>' +
+      l.notes.map(noteCard).join('');
+  }
+  function renderNotes(k) {
+    var box = $('readyNotes'), ls = lessonsOf(k.name).filter(function (l) { return l.notes && l.notes.length; });
+    $('ready').classList.toggle('hasnotes', !!ls.length);
+    if (!ls.length) { box.innerHTML = ''; return; }
+    box.innerHTML = '<h2>📝 Teacher’s notes</h2>' + lessonBlock(ls[0], true) +
+      (ls.length > 1 ? '<details class="older"><summary>Earlier lessons (' + (ls.length - 1) + ')</summary>' + ls.slice(1, 5).map(function (l) { return lessonBlock(l, false); }).join('') + '</details>' : '');
+  }
+  $('readyNotes').addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-edit]') : null; if (!b) return;
+    var l = lessonsOf(kid.name).filter(function (x) { return x.id === b.getAttribute('data-edit'); })[0];
+    if (l) openReview({ kid: kid, id: l.id, ts: l.ts, text: l.transcript || '', notes: l.notes, existing: true, minutes: l.minutes });
+  });
+  function renderDraftBar() {
+    var d = store.get('lessonDraft', null), old = $('draftbar'); if (old) old.parentNode.removeChild(old);
+    if (!d || !d.text || lesson) return;
+    var k = KIDS.filter(function (x) { return x.name === d.kid; })[0]; if (!k) return;
+    var bar = document.createElement('div'); bar.className = 'draftbar'; bar.id = 'draftbar';
+    bar.innerHTML = '📝 Unsaved lesson notes for ' + esc(k.name) + ' (' + esc(niceDate({ ts: d.ts })) + '). <button class="btn alt" style="font-size:18px;padding:8px 16px">Review them</button>';
+    bar.querySelector('button').onclick = function () { kid = k; openReview({ kid: k, ts: d.ts, text: d.text, minutes: d.minutes }); };
+    $('pick').appendChild(bar);
+  }
+
+  // ======================= Lesson mode: live speech-to-text =======================
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var lesson = null;
+  function setLessonStatus(st) {
+    var el = $('lessonStatus');
+    var m = { on: ['status go', '🎤 Listening to lesson…'], restart: ['status go', '🎤 Listening to lesson…'], tap: ['status wait', '⏸ Paused — tap “Keep listening”'],
+      off: ['status wait', '🙉 Speech-to-text isn’t available'], end: ['status wait', '✍️ Writing up the notes…'] }[st] || ['status go', '🎤 Listening…'];
+    el.className = m[0]; el.textContent = m[1];
+  }
+  function startLesson() {
+    var k = kid; if (!k) return;
+    stopMic(); if (panelMic) panelMic = false;
+    lesson = { kid: k, startedAt: new Date(), finals: [], sess: {}, active: true, restarts: [], fatal: null, rec: null, savedAt: 0 };
+    $('lessonWho').textContent = '🎓 ' + k.name + '’s ' + k.instrument.toLowerCase() + ' lesson';
+    $('lessonText').innerHTML = '<span class="interim">The teacher’s words will show up here…</span>';
+    $('lessonErr').textContent = ''; $('lessonResume').style.display = 'none'; $('lessonType').style.display = 'none';
+    $('lessonEnd').textContent = '■ End lesson'; $('lessonTime').textContent = '0:00';
+    show('lesson'); keepAwake();
+    lesson.timer = setInterval(function () { if (lesson) $('lessonTime').textContent = fmt((Date.now() - lesson.startedAt) / 1000); }, 1000);
+    if (!SR) {
+      lesson.active = false; setLessonStatus('off');
+      $('lessonErr').textContent = 'This browser can’t turn speech into text. On the iPad, open this page in Safari (iPadOS 14.5 or newer) and turn on Settings › General › Keyboard › Enable Dictation. You can still type the notes yourself.';
+      $('lessonType').style.display = ''; $('lessonEnd').textContent = '← Back';
+      return;
+    }
+    setLessonStatus('on'); recStart();
+  }
+  function commitSess(L) {
+    Object.keys(L.sess).map(Number).sort(function (a, b) { return a - b; }).forEach(function (i) { var t = (L.sess[i].t || '').trim(); if (t) L.finals.push(t); });
+    L.sess = {};
+  }
+  function lessonText(L) {
+    var cur = Object.keys(L.sess).map(Number).sort(function (a, b) { return a - b; }).map(function (i) { return (L.sess[i].t || '').trim(); }).filter(Boolean);
+    return L.finals.concat(cur).join('\n');
+  }
+  function recStart() {
+    var L = lesson; if (!L || !L.active || L.rec) return;
+    var rec;
+    try { rec = new SR(); } catch (e) { return lessonFatal('start'); }
+    rec.lang = 'en-US'; rec.continuous = true; rec.interimResults = true; rec.maxAlternatives = 1;
+    L.rec = rec; L.sess = {};
+    rec.onresult = function (e) {
+      if (L.rec !== rec) return;
+      for (var i = e.resultIndex; i < e.results.length; i++) {
+        var res = e.results[i], t = (res[0] && res[0].transcript) || '', old = L.sess[i];
+        // Some iOS versions re-use a result slot for a new sentence: keep the old one.
+        if (old && old.final && t.trim() && t.trim().slice(0, 12).toLowerCase() !== old.t.trim().slice(0, 12).toLowerCase()) L.finals.push(old.t.trim());
+        L.sess[i] = { t: t, final: !!res.isFinal };
+      }
+      renderTranscript(L); saveDraft(L);
+    };
+    rec.onerror = function (e) { var er = e && e.error; if (er === 'not-allowed' || er === 'service-not-allowed' || er === 'audio-capture') L.fatal = er; };
+    rec.onend = function () {
+      if (L.rec !== rec) return;
+      commitSess(L); L.rec = null; saveDraft(L, true);
+      if (L.ending) { L.ending(); return; }
+      if (!L.active || lesson !== L) return;
+      if (L.fatal) return lessonFatal(L.fatal);
+      // iOS stops listening after a silence or about a minute: start again right away.
+      var now = Date.now(); L.restarts = L.restarts.filter(function (t) { return now - t < 20000; }); L.restarts.push(now);
+      if (L.restarts.length > 8) return needTap();
+      setLessonStatus('restart'); setTimeout(recStart, 250);
+    };
+    try { rec.start(); } catch (e) { L.rec = null; needTap(); }
+  }
+  function needTap() { if (!lesson) return; setLessonStatus('tap'); $('lessonResume').style.display = ''; }
+  function lessonFatal(er) {
+    if (!lesson) return;
+    setLessonStatus('tap'); $('lessonResume').style.display = ''; $('lessonType').style.display = '';
+    $('lessonErr').textContent = (er === 'not-allowed' || er === 'service-not-allowed')
+      ? 'The iPad didn’t allow speech-to-text. Check Settings › Safari › Microphone (Allow) and Settings › General › Keyboard › Enable Dictation, then tap Keep listening.'
+      : (er === 'audio-capture' ? 'The microphone isn’t available (is another app using it?). Tap Keep listening to try again.' : 'Listening stopped. Tap Keep listening to try again.');
+  }
+  function renderTranscript(L) {
+    var box = $('lessonText'), atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
+    var html = L.finals.slice(-80).map(function (t) { return '<div>' + esc(t) + '</div>'; }).join('');
+    Object.keys(L.sess).map(Number).sort(function (a, b) { return a - b; }).forEach(function (i) { var r = L.sess[i]; if (r.t.trim()) html += '<div' + (r.final ? '' : ' class="interim"') + '>' + esc(r.t) + '</div>'; });
+    box.innerHTML = html || '<span class="interim">The teacher’s words will show up here…</span>';
+    if (atBottom) box.scrollTop = box.scrollHeight;
+  }
+  function saveDraft(L, now) {
+    if (!now && Date.now() - L.savedAt < 3000) return; L.savedAt = Date.now();
+    var t = lessonText(L); if (t) store.set('lessonDraft', { kid: L.kid.name, ts: L.startedAt.getTime(), text: t, minutes: Math.round((Date.now() - L.startedAt) / 60000) });
+  }
+  function endLesson() {
+    var L = lesson; if (!L) return;
+    L.active = false; clearInterval(L.timer); setLessonStatus('end');
+    function done() {
+      if (L.finished) return; L.finished = true; L.ending = null; commitSess(L); releaseAwake();
+      var text = L.finals.join('\n').trim(), mins = Math.round((Date.now() - L.startedAt) / 60000);
+      lesson = null;
+      if (!text && !SR) { show('ready'); return; }
+      openReview({ kid: L.kid, ts: L.startedAt.getTime(), text: text, minutes: mins });
+    }
+    if (L.rec) { L.ending = done; try { L.rec.stop(); } catch (e) {} setTimeout(done, 2000); } else done();
+  }
+
+  // ======================= Review / edit notes (grown-up) =======================
+  var KINDS = [['dynamics:louder', '🔊 Louder'], ['dynamics:softer', '🤫 Softer'], ['dynamics:cresc', '📈 Crescendo'], ['dynamics:decresc', '📉 Diminuendo'],
+    ['dynamics:accent', '❗ Accents'], ['dynamics:', '🔊 Loud & soft (other)'], ['tempo:slower', '🐢 Slower'], ['tempo:faster', '🐇 Faster'], ['tempo:steady', '⏱️ Steady beat'],
+    ['tempo:target', '⏱️ Tempo (BPM)'], ['rhythm:', '🥁 Counting & rhythm'], ['articulation:', '🎵 Articulation'], ['bowing:', '🎻 Bowing'], ['intonation:', '🎯 In tune'],
+    ['fingering:', '🖐️ Fingering'], ['hand:', '👐 Hand position'], ['posture:', '🪑 Posture'], ['pedal:', '🦶 Pedal'], ['repeat:', '🔁 Repeat it'], ['general:', '📝 Other']];
+  var rv = null;
+  function openReview(o) {
+    var notes = o.notes ? JSON.parse(JSON.stringify(o.notes)) : parseLessonNotes(o.text || '', { instrument: o.kid.instrument });
+    rv = { kid: o.kid, id: o.id || (o.ts + '-' + o.kid.name), ts: o.ts, text: o.text || '', notes: notes, existing: !!o.existing, minutes: o.minutes || 0 };
+    renderReview(); show('review'); $('review').scrollTop = 0;
+  }
+  function checkable(n) { return (n.type === 'dynamics' && (n.dir === 'louder' || n.dir === 'softer')) || (n.type === 'tempo' && !!n.bpm); }
+  function renderReview() {
+    var k = rv.kid;
+    $('reviewSub').textContent = k.emoji + ' ' + k.name + ' · ' + k.instrument + ' · ' + niceDate({ ts: rv.ts }) + (rv.minutes ? ' · ' + rv.minutes + ' min' : '') + '. ' +
+      (rv.notes.length ? 'I found ' + rv.notes.length + ' note' + (rv.notes.length === 1 ? '' : 's') + '. Fix anything that’s off, delete what isn’t needed, then Save. ⭐ = key point. 🎤 = the iPad listens for it during practice.'
+        : (rv.text ? 'I didn’t find teacher directions in what was heard. Add notes yourself, or fix the transcript below and tap ↻ Re-read.' : 'Nothing was heard. Add notes yourself below.'));
+    $('reviewText').value = rv.text;
+    $('reviewDiscard').textContent = rv.existing ? 'Delete lesson' : 'Discard';
+    var list = $('reviewList'); list.innerHTML = '';
+    rv.notes.forEach(function (n, i) {
+      var row = document.createElement('div'); row.className = 'rv';
+      var kindVal = n.type + ':' + (n.type === 'dynamics' || n.type === 'tempo' ? (n.dir || '') : '');
+      if (n.type === 'tempo' && !n.dir) kindVal = 'tempo:target';
+      row.innerHTML = '<div class="r1"><select class="kind">' + KINDS.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === kindVal ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select>' +
+        '<input class="txt" type="text" placeholder="What should they do?" value="' + esc(n.text) + '">' +
+        (n.type === 'tempo' ? '<input class="bpmIn" type="number" inputmode="numeric" min="30" max="240" placeholder="BPM" value="' + (n.bpm || '') + '">' : '') +
+        '<button class="tg star' + (n.key ? ' on' : '') + '" title="Key point">⭐</button>' +
+        (checkable(n) ? '<button class="tg mic' + (n.check ? ' on' : '') + '" title="Listen for this during practice">🎤 check</button>' : '') +
+        '<button class="del" title="Delete">🗑</button></div>' +
+        (n.source ? '<div class="q">Teacher said: “' + esc(clip(n.source, 220)) + '”</div>' : '');
+      row.querySelector('.kind').onchange = function () {
+        var v = this.value.split(':'); n.type = v[0]; n.dir = v[1] || null;
+        if (n.type !== 'tempo') n.bpm = null;
+        n.check = checkable(n); if (!n.edited || !n.text) n.text = noteTitle(n); renderReview();
+      };
+      row.querySelector('.txt').oninput = function () { n.text = this.value; n.edited = true; };
+      var bi = row.querySelector('.bpmIn');
+      if (bi) bi.oninput = function () { var v = parseInt(this.value, 10); n.bpm = v >= 30 && v <= 240 ? v : null; var was = n.check; n.check = !!n.bpm && (was || !n._bpmSeen); n._bpmSeen = true;
+        if (!n.edited) { n.text = noteTitle(n); row.querySelector('.txt').value = n.text; } };
+      if (bi) bi.onchange = function () { renderReview(); };
+      row.querySelector('.star').onclick = function () { n.key = !n.key; this.classList.toggle('on', n.key); };
+      var mic = row.querySelector('.mic'); if (mic) mic.onclick = function () { n.check = !n.check; this.classList.toggle('on', n.check); };
+      row.querySelector('.del').onclick = function () { rv.notes.splice(i, 1); renderReview(); };
+      list.appendChild(row);
+    });
+  }
+  function saveReview() {
+    var k = rv.kid, notes = rv.notes.filter(function (n) { return n.text && n.text.trim(); }).map(function (n) {
+      n.text = n.text.trim(); if (!n.id) n.id = 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); delete n._bpmSeen; return n; });
+    var d = new Date(rv.ts), text = $('reviewText').value;
+    var L = { id: rv.id, ts: rv.ts, date: dayStr(d), start: pad(d.getHours()) + ':' + pad(d.getMinutes()), kid: k.name, instrument: k.instrument, minutes: rv.minutes,
+      notes: notes, transcript: text, synced: false };
+    var ls = lessonsOf(k.name).filter(function (x) { return x.id !== L.id; }); ls.push(L); saveLessonsOf(k.name, ls);
+    var dft = store.get('lessonDraft', null); if (dft && dft.ts === rv.ts) store.set('lessonDraft', null);
+    queueLesson({ type: 'lesson', id: L.id, date: L.date, start: L.start, kid: L.kid, instrument: L.instrument, minutes: L.minutes, notes: notes.map(compactNote), transcript: text });
+    rv = null; openKid(k);
+  }
+  function discardReview() {
+    var k = rv.kid;
+    if (rv.existing) {
+      if (!confirm('Delete this lesson and its notes?')) return;
+      var id = rv.id; saveLessonsOf(k.name, lessonsOf(k.name).filter(function (x) { return x.id !== id; }));
+      queueLesson({ type: 'lesson', id: id, kid: k.name, deleted: true });
+    } else {
+      if (!confirm('Throw away these lesson notes?')) return;
+      var dft = store.get('lessonDraft', null); if (dft && dft.ts === rv.ts) store.set('lessonDraft', null);
+    }
+    rv = null; openKid(k);
+  }
+  $('lessonBtn').onclick = startLesson;
+  $('lessonEnd').onclick = endLesson;
+  $('lessonResume').onclick = function () { if (!lesson) return; lesson.restarts = []; lesson.fatal = null; lesson.active = true; this.style.display = 'none'; $('lessonErr').textContent = ''; setLessonStatus('on'); recStart(); };
+  $('lessonType').onclick = function () { var L = lesson; if (!L) return; L.active = false; clearInterval(L.timer); try { L.rec && L.rec.abort(); } catch (e) {} L.rec = null; commitSess(L); lesson = null; releaseAwake();
+    openReview({ kid: L.kid, ts: L.startedAt.getTime(), text: L.finals.join('\n'), minutes: Math.round((Date.now() - L.startedAt) / 60000) }); };
+  $('addNote').onclick = function () { rv.notes.push({ id: '', type: 'general', dir: null, text: '', source: '', sources: [], key: false, check: false, tags: [], edited: true });
+    renderReview(); var t = document.querySelectorAll('#reviewList .txt'); if (t.length) t[t.length - 1].focus(); };
+  $('reparse').onclick = function () { if (rv.notes.length && !confirm('Replace these notes with a fresh read of the transcript?')) return;
+    rv.text = $('reviewText').value; rv.notes = parseLessonNotes(rv.text, { instrument: rv.kid.instrument }); renderReview(); };
+  $('reviewSave').onclick = saveReview;
+  $('reviewDiscard').onclick = discardReview;
+
+  // ======================= Coaching during practice =======================
+  function setupCoach(s) {
+    var L = latestLesson(s.kid.name), notes = (L && L.notes) || [], ch = activeChecks(notes), base = store.get('loudBase.' + s.kid.name, null);
+    var est = createTempoEstimator();
+    var c = s.coach = { lessonId: L ? L.id : null, notes: notes, loudNote: ch.loud, tempoNote: ch.tempo, base: base,
+      loud: createLoudCoach({ dir: ch.loud ? ch.loud.dir : null, baseline: base }), est: est, onset: createOnsetDetector({ onGate: est.addGate }),
+      tempo: { checks: 0, ok: 0, nudges: 0, lastNudge: -1e9, offSince: null, lastYou: null }, banner: { msg: '', until: 0 }, done: {}, lastEstAt: 0, playing: false };
+    onAudioBlock = ch.tempo ? function (buf, t0, sr) {
+      if (!session || session.coach !== c) return;
+      var ons = c.onset.processBuffer(buf, t0, sr, metro.clickNear, c.playing);
+      for (var i = 0; i < ons.length; i++) c.est.add(ons[i]);
+    } : null;
+    renderCoach(c);
+  }
+  function reminders(c) { return c.notes.filter(function (n) { return n !== c.loudNote && n !== c.tempoNote; }); }
+  function renderCoach(c) {
+    var box = $('coach'), html = '';
+    if (c.loudNote) html += '<div class="cc" id="ccLoud"><div class="t">' + noteIcon(c.loudNote) + ' ' + esc(c.loudNote.text) + '</div><div class="st"></div></div>';
+    if (c.tempoNote) html += '<div class="cc" id="ccTempo"><div class="t">' + noteIcon(c.tempoNote) + ' ' + esc(c.tempoNote.text) + '</div><div class="st"></div>' +
+      '<button class="setm" id="ccSetM">🥁 Set metronome to ' + c.tempoNote.bpm + '</button></div>';
+    reminders(c).slice(0, 8).forEach(function (n) {
+      html += '<button class="cc rem" data-id="' + esc(n.id) + '"><div class="t">' + (n.key ? '⭐ ' : '') + noteIcon(n) + ' ' + esc(n.text) + '</div><div class="st">Tap when you’ve worked on it</div></button>';
+    });
+    box.innerHTML = html;
+    $('practice').classList.toggle('coached', !!html);
+    $('nudge').classList.remove('on'); $('nudge').textContent = '';
+    Array.prototype.forEach.call(box.querySelectorAll('.rem'), function (b) {
+      b.onclick = function () { var id = b.getAttribute('data-id'); c.done[id] = !c.done[id]; b.classList.toggle('done', !!c.done[id]);
+        b.querySelector('.st').textContent = c.done[id] ? '✓ Worked on it!' : 'Tap when you’ve worked on it'; };
+    });
+    if ($('ccSetM')) $('ccSetM').onclick = function () { metro.setBpm(c.tempoNote.bpm); $('metro').style.display = 'block'; metro.ui(); this.textContent = '✓ Metronome set to ' + c.tempoNote.bpm + ' — tap ▶ Start'; };
+  }
+  function setCard(id, cls, txt) { var el = $(id); if (!el) return; el.className = 'cc' + (cls ? ' ' + cls : ''); var st = el.querySelector('.st'); if (st.textContent !== txt) st.textContent = txt; }
+  function coachStep(r, nowMs, dt) {
+    var c = session && session.coach; if (!c) return;
+    c.playing = r.playing;
+    var t = nowMs / 1000, active = !!(r.playing && r.loud && !r.gated);
+    var lr = c.loud.frame(r.level, active, t, dt);
+    if (c.loudNote) {
+      var louder = c.loudNote.dir === 'louder';
+      var m = { learning: ['', '🎤 Still learning how loud you usually play'], listening: ['', r.playing ? '👂 Listening…' : ''],
+        met: ['met', louder ? '✓ Yes! That’s louder than usual' : '✓ Yes! Nice and gentle'], close: ['', louder ? 'Almost — a little more sound' : 'Almost — a little gentler'],
+        under: ['warn', louder ? 'Try a bit more sound 🔊' : 'Try it a bit gentler 🤫'], way: ['warn', louder ? 'Softer than usual — more sound 🔊' : 'Louder than usual — gentler 🤫'] }[lr.state] || ['', ''];
+      setCard('ccLoud', m[0], m[1]);
+    }
+    if (c.tempoNote && audio && t - c.lastEstAt >= 1) {
+      c.lastEstAt = t;
+      var target = c.tempoNote.bpm, cmp = compareTempo(c.est.estimate(audio.ctx.currentTime), target), tp = c.tempo;
+      if (cmp && r.playing) {
+        tp.checks++; tp.lastYou = cmp.you;
+        if (cmp.status === 'ok') { tp.ok++; tp.offSince = null; setCard('ccTempo', 'met', '✓ Right on — about ' + cmp.you); }
+        else {
+          if (tp.offSince === null) tp.offSince = t;
+          setCard('ccTempo', 'warn', 'Aim for ' + target + ' — you’re around ' + cmp.you + (cmp.status === 'fast' ? ' 🐢' : ' 🐇'));
+          if (t - tp.offSince >= 6 && t - tp.lastNudge >= 45) {
+            tp.nudges++; tp.lastNudge = t; tp.offSince = null;
+            c.banner = { msg: 'Teacher said ' + target + ' — you’re around ' + cmp.you + '. ' + (metro.isRunning() ? 'Follow the click 🥁' : 'Try the metronome 🥁'), until: t + 7 };
+          }
+        }
+      } else {
+        tp.offSince = null;
+        var mOn = metro.isRunning() && Math.abs(metro.getBpm() - target) <= 2;
+        setCard('ccTempo', '', mOn ? '🥁 Metronome is on ' + target + ' — play along!' : (r.playing ? '👂 Listening for your tempo…' : ''));
+      }
+    }
+    var msg = lr.nudge || (t < c.banner.until ? c.banner.msg : ''), nb = $('nudge');
+    if (msg) { if (nb.textContent !== msg) nb.textContent = msg; nb.classList.add('on'); } else nb.classList.remove('on');
+  }
+  function coachSummary(c) {
+    if (!c) return '';
+    var parts = [], ls = c.loud.summary();
+    if (c.loudNote) parts.push((c.loudNote.dir === 'louder' ? 'Louder' : 'Softer') + ': ' + (ls.learning ? 'still learning usual level' :
+      ls.nudges + ' nudge' + (ls.nudges === 1 ? '' : 's') + (ls.metPct !== null ? ', met ' + ls.metPct + '% of playing' : '')));
+    if (c.tempoNote) { var tp = c.tempo; parts.push('Tempo ' + c.tempoNote.bpm + ': ' + (tp.checks ? tp.nudges + ' nudge' + (tp.nudges === 1 ? '' : 's') + ', on target ' +
+      Math.round(tp.ok / tp.checks * 100) + '% of readings, last ~' + tp.lastYou : 'no confident reading')); }
+    var rem = reminders(c); if (rem.length) parts.push('Reminders worked on: ' + rem.filter(function (n) { return c.done[n.id]; }).length + '/' + rem.length);
+    if (ls.sessDb !== null && ls.sessSecs >= 20) parts.push('Level ' + Math.round(ls.sessDb) + ' dB' + (c.base ? ' (usual ' + Math.round(c.base.db) + ')' : ''));
+    return parts.join(' · ');
+  }
+  function endCoach(s) {
+    var c = s.coach; if (!c) return;
+    s.coaching = coachSummary(c);
+    var ls = c.loud.summary(), nb = updateBaseline(store.get('loudBase.' + s.kid.name, null), ls.sessDb, ls.sessSecs, !!c.loudNote);
+    if (nb) store.set('loudBase.' + s.kid.name, nb);
+    $('nudge').classList.remove('on');
+  }
+  renderKids(); flush(); flushLessons();
+  window.__wpt = { metro: metro, det: det, KIDS: KIDS, logSession: logSession, getSession: function () { return session; },
+    lessonsOf: lessonsOf, openKid: openKid, getLesson: function () { return lesson; }, checkServer: checkServer, store: store, getAudio: function () { return audio; } }; // for testing
 })();
 </script>
 </body>
