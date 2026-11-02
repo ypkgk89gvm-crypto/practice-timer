@@ -11,10 +11,10 @@
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { margin:0; height:100%; background:var(--bg); color:var(--ink);
     font-family: ui-rounded, "SF Pro Rounded", -apple-system, "Segoe UI", system-ui, sans-serif; overflow:hidden; }
-  .screen { position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; }
+  .screen { position:absolute; top:0; right:0; bottom:0; left:0; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; }
   .screen.on { display:flex; }
-  h1 { font-size:clamp(32px,6vw,60px); margin:0 0 8px; }
-  .sub { font-size:clamp(18px,2.6vw,26px); color:var(--soft); margin:0 0 32px; }
+  h1 { font-size:max(32px,min(6vw,60px)); font-size:clamp(32px,6vw,60px); margin:0 0 8px; }
+  .sub { font-size:max(18px,min(2.6vw,26px)); font-size:clamp(18px,2.6vw,26px); color:var(--soft); margin:0 0 32px; }
   .kids { display:flex; flex-wrap:wrap; gap:24px; justify-content:center; }
   .kid { border:0; border-radius:32px; width:min(28vw,280px); min-width:200px; padding:28px 16px; color:#fff; cursor:pointer;
     font:inherit; box-shadow:0 10px 0 rgba(0,0,0,.15); transition:transform .1s; }
@@ -22,9 +22,9 @@
   .kid .emoji { font-size:72px; display:block; }
   .kid .name { font-size:40px; font-weight:800; display:block; margin-top:8px; }
   .kid .what { font-size:22px; opacity:.95; display:block; margin-top:4px; }
-  .who { font-size:clamp(26px,4vw,40px); font-weight:800; margin-bottom:4px; }
-  .clock { font-variant-numeric:tabular-nums; font-weight:900; font-size:clamp(110px,24vw,260px); line-height:1; letter-spacing:-2px; margin:8px 0; transition:color .3s; }
-  .status { font-size:clamp(24px,4vw,40px); font-weight:800; padding:12px 28px; border-radius:999px; margin:8px 0 18px; }
+  .who { font-size:max(26px,min(4vw,40px)); font-size:clamp(26px,4vw,40px); font-weight:800; margin-bottom:4px; }
+  .clock { font-variant-numeric:tabular-nums; font-weight:900; font-size:max(110px,min(24vw,260px)); font-size:clamp(110px,24vw,260px); line-height:1; letter-spacing:-2px; margin:8px 0; transition:color .3s; }
+  .status { font-size:max(24px,min(4vw,40px)); font-size:clamp(24px,4vw,40px); font-weight:800; padding:12px 28px; border-radius:999px; margin:8px 0 18px; }
   .status.go { background:#DDF6EC; color:#137A55; }
   .status.wait { background:#FFE9D6; color:#B35A12; animation:pulse 1.4s infinite; }
   @keyframes pulse { 50% { transform:scale(1.05); } }
@@ -38,16 +38,16 @@
   .btn.big { font-size:40px; padding:26px 64px; background:var(--go); color:#fff; box-shadow:0 8px 0 #158A60; }
   .btn.done { background:#EDE6F7; color:var(--ink); }
   .btn.alt { background:#fff; color:var(--ink); border:3px solid #EDE6F7; }
-  .gear { position:fixed; top:14px; right:16px; z-index:20; border:0; background:none; font-size:26px; opacity:.35; padding:10px; cursor:pointer; }
+  .gear { -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; position:fixed; top:14px; right:16px; z-index:20; border:0; background:none; font-size:26px; opacity:.35; padding:10px; cursor:pointer; }
   .back { position:fixed; top:14px; left:16px; z-index:20; }
   #celebrate { background:#2B2340; color:#fff; }
   #celebrate .sub { color:#E3DDFB; }
   #celebrate video { max-width:min(90vw,900px); max-height:55vh; border-radius:24px; display:none; background:#000; margin:12px 0; }
-  #confetti { position:fixed; inset:0; pointer-events:none; z-index:5; }
+  #confetti { position:fixed; top:0; right:0; bottom:0; left:0; inset:0; pointer-events:none; z-index:5; }
   #celebrate > *:not(canvas) { position:relative; z-index:6; }
-  .panel { position:fixed; inset:0; background:rgba(43,35,64,.55); display:none; align-items:center; justify-content:center; z-index:30; }
+  .panel { position:fixed; top:0; right:0; bottom:0; left:0; inset:0; background:rgba(43,35,64,.55); display:none; align-items:center; justify-content:center; z-index:30; }
   .panel.on { display:flex; }
-  .sheet { background:#fff; border-radius:28px; padding:28px; width:min(92vw,620px); max-height:90vh; overflow:auto; text-align:left; }
+  .sheet { background:#fff; border-radius:28px; padding:28px; width:min(92vw,620px); max-height:90vh; overflow:auto; -webkit-overflow-scrolling:touch; text-align:left; }
   .sheet h2 { margin:0 0 12px; }
   .sheet label { display:block; font-weight:700; margin:18px 0 6px; }
   .sheet input[type=range] { width:100%; }
@@ -90,7 +90,7 @@
   .draftbar { background:#FFF3C4; border-radius:18px; padding:12px 18px; margin-top:20px; font-size:18px; }
   /* ---- lesson screen ---- */
   .ltime { font-size:56px; font-weight:900; font-variant-numeric:tabular-nums; }
-  .transcript { width:min(94vw,820px); height:38vh; overflow-y:auto; background:#fff; border-radius:22px; padding:16px 20px; text-align:left; font-size:20px; line-height:1.4; margin:12px 0; border:3px solid #EDE6F7; }
+  .transcript { width:min(94vw,820px); height:38vh; overflow-y:auto; -webkit-overflow-scrolling:touch; background:#fff; border-radius:22px; padding:16px 20px; text-align:left; font-size:20px; line-height:1.4; margin:12px 0; border:3px solid #EDE6F7; }
   .transcript .interim { color:#A39BBF; }
   .btn.stopbig { background:#E2574C; box-shadow:0 8px 0 #A8382F; }
   /* ---- review screen ---- */
@@ -106,9 +106,9 @@
   .rv .del { border:0; background:#FBE3E1; color:#A8382F; border-radius:12px; font-size:16px; padding:9px 12px; }
   .review textarea { width:100%; min-height:180px; font-size:16px; border-radius:14px; border:2px solid #EDE6F7; padding:10px; }
   /* ---- coaching during practice ---- */
-  #practice.coached .clock { font-size:clamp(84px,15vw,190px); }
-  #ready.hasnotes .clock { font-size:clamp(80px,14vw,170px); }
-  .nudge { min-height:0; font-size:clamp(20px,3vw,28px); font-weight:800; border-radius:18px; padding:0 20px; margin:0; max-width:min(94vw,820px); transition:all .3s; overflow:hidden; max-height:0; }
+  #practice.coached .clock { font-size:max(84px,min(15vw,190px)); font-size:clamp(84px,15vw,190px); }
+  #ready.hasnotes .clock { font-size:max(80px,min(14vw,170px)); font-size:clamp(80px,14vw,170px); }
+  .nudge { min-height:0; font-size:max(20px,min(3vw,28px)); font-size:clamp(20px,3vw,28px); font-weight:800; border-radius:18px; padding:0 20px; margin:0; max-width:min(94vw,820px); transition:all .3s; overflow:hidden; max-height:0; }
   .nudge.on { background:#FFF0C2; color:#7A5300; padding:12px 20px; margin:10px 0 0; max-height:200px; }
   .coach { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; width:min(96vw,900px); margin-top:14px; }
   .cc { background:#fff; border:3px solid #EDE6F7; border-radius:20px; padding:12px 16px; text-align:left; flex:1 1 240px; max-width:420px; font:inherit; color:var(--ink); }
@@ -116,7 +116,27 @@
   .cc.met { border-color:#7FD8B5; background:#EFFBF5; } .cc.warn { border-color:#F5C842; background:#FFFBEA; }
   .cc.rem { cursor:pointer; } .cc.rem.done { border-color:#7FD8B5; background:#EFFBF5; } .cc.rem.done .st { color:#137A55; font-weight:800; }
   .cc .setm { margin-top:8px; font:inherit; font-size:17px; font-weight:800; border:0; border-radius:14px; padding:10px 16px; background:var(--ink); color:#fff; }
+  /* ---- older Safari (iOS 12-14.0): no flexbox "gap", so space items with margins instead ---- */
+  .no-flexgap .kids > * { margin:12px; }
+  .no-flexgap .row > * { margin:8px; }
+  .no-flexgap .metro .mrow > * { margin:7px; }
+  .no-flexgap .metro .dots > * + * { margin-left:10px; }
+  .no-flexgap .tnotes h2 > * + * { margin-left:10px; }
+  .no-flexgap .tn > * + * { margin-left:14px; }
+  .no-flexgap .rv .r1 > * { margin:4px; }
+  .no-flexgap .coach > * { margin:6px; }
 </style>
+<script>
+// Feature test: flexbox gap (Safari 14.1+). If missing, <html class="no-flexgap"> turns on the margin fallback above.
+(function () {
+  try {
+    var f = document.createElement('div'); f.style.display = 'flex'; f.style.flexDirection = 'column'; f.style.rowGap = '1px';
+    f.appendChild(document.createElement('div')); f.appendChild(document.createElement('div'));
+    document.documentElement.appendChild(f); var ok = f.scrollHeight === 1; f.parentNode.removeChild(f);
+    if (!ok) document.documentElement.className += ' no-flexgap';
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
 <button class="gear" id="gear" aria-label="Parent settings">⚙️</button>
@@ -139,7 +159,7 @@
   <p class="err" id="micErr"></p>
   <div class="tnotes" id="readyNotes"></div>
   <div class="row"><button class="btn lesson" id="lessonBtn">🎓 Lesson</button></div>
-  <p class="small">Grown-ups: tap 🎓 Lesson when the teacher starts, and the iPad writes down what the teacher says.</p>
+  <p class="small" id="lessonHint">Grown-ups: tap 🎓 Lesson when the teacher starts, and the iPad writes down what the teacher says.</p>
   </div>
 </section>
 
@@ -233,6 +253,7 @@
   <input type="url" id="logUrl" placeholder="https://script.google.com/macros/s/…/exec">
   <label>Celebration video address</label>
   <input type="url" id="vidUrl" placeholder="celebrate.mp4">
+  <p class="small" id="compatTip" style="display:none"></p>
   <p class="small" id="queueMsg"></p>
   <p class="small" id="lessonSyncMsg"></p>
   <div class="row" style="justify-content:flex-start;margin-top:4px"><button class="btn alt" id="resetBase" style="font-size:16px;padding:10px 16px">Reset "usual loudness" for all kids</button></div>
@@ -622,10 +643,18 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   ];
   var DEFAULT_LOG_URL = 'https://script.google.com/macros/s/AKfycbyrQFq9aeZiwDeV-N7UFdkFFm03anLJu8McENo7iP0UZUT8_DBu7oRvxHaYAZdhRmIN/exec';
   var DEFAULT_VIDEO = '__VIDEO_URL__';
+  // Old iOS: Private Browsing (and some quota errors) make localStorage throw, so keep a copy in memory too.
+  var memStore = {}, lsOk = (function () { try { localStorage.setItem('wpt.__t', '1'); localStorage.removeItem('wpt.__t'); return true; } catch (e) { return false; } })();
   var store = {
-    get: function (k, d) { try { var v = localStorage.getItem('wpt.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
-    set: function (k, v) { try { localStorage.setItem('wpt.' + k, JSON.stringify(v)); } catch (e) {} }
+    get: function (k, d) {
+      if (memStore.hasOwnProperty(k)) { try { return JSON.parse(memStore[k]); } catch (e) { return d; } }
+      try { var v = localStorage.getItem('wpt.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { var j = JSON.stringify(v); try { localStorage.setItem('wpt.' + k, j); delete memStore[k]; } catch (e) { memStore[k] = j; } }
   };
+  // iOS / iPadOS version (null elsewhere). iPadOS 13+ in desktop mode reports as a Mac, which is fine: those are modern.
+  var IOSV = (function () { var m = /\b(iPad|iPhone|iPod)\b/.test(navigator.userAgent) && navigator.userAgent.match(/OS (\d+)_(\d+)/); return m ? +m[1] + m[2] / 100 : null; })();
+  var STANDALONE = !!(window.navigator.standalone || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches));
+  if (IOSV !== null && IOSV < 13.02) { ICON.posture = '💺'; }   // 🪑 needs iOS 13.2
   function logUrl() { var u = store.get('logUrl', ''); return u || (DEFAULT_LOG_URL.indexOf('__') === 0 ? '' : DEFAULT_LOG_URL); }
   function vidUrl() { var u = store.get('vidUrl', ''); return u || (DEFAULT_VIDEO.indexOf('__') === 0 ? 'celebrate.mp4' : DEFAULT_VIDEO); }
 
@@ -640,7 +669,8 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   var onAudioBlock = null; // set during a coached session: (samples, startTime, sampleRate)
   function startMic() {
     if (audio) return Promise.resolve();
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return Promise.reject(new Error('This page must be opened over https:// to use the microphone.'));
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return Promise.reject(new Error(
+      (STANDALONE || (IOSV !== null && location.protocol === 'https:')) ? 'Open this page in Safari to use the microphone.' : 'This page must be opened over https:// to use the microphone.'));
     return navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } })
       .then(function (stream) {
         var Ctx = window.AudioContext || window.webkitAudioContext; var ctx = new Ctx();
@@ -656,9 +686,15 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
           sp.onaudioprocess = function (ev) { if (onAudioBlock) { var b = ev.inputBuffer; try { onAudioBlock(b.getChannelData(0), ctx.currentTime - b.duration, b.sampleRate); } catch (e) {} } };
         }
         audio = { ctx: ctx, stream: stream, analyser: analyser, buf: new Float32Array(analyser.fftSize), sp: sp };
-        if (ctx.state === 'suspended') ctx.resume();
+        if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
       });
   }
+  // Older iOS only lets Web Audio start inside a tap. If the sound engine is still paused, the next tap anywhere wakes it.
+  function wakeAudio() {
+    var cs = [audio && audio.ctx, metro && metro.ctx && metro.ctx()];
+    cs.forEach(function (c) { try { if (c && c.state === 'suspended' && c.resume) c.resume(); } catch (e) {} });
+  }
+  document.addEventListener('touchend', wakeAudio, true); document.addEventListener('click', wakeAudio, true);
   function stopMic() {
     metro.stop();
     onAudioBlock = null;
@@ -674,7 +710,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
       if (audio && audio.ctx && audio.ctx.state !== 'closed') { if (ctx !== audio.ctx) { ctx = audio.ctx; ownCtx = false; gain = null; } }
       else if (!ctx || ctx.state === 'closed') { var C = window.AudioContext || window.webkitAudioContext; ctx = new C(); ownCtx = true; gain = null; }
       if (!gain) { gain = ctx.createGain(); gain.gain.value = 0.35; gain.connect(ctx.destination); }  // moderate volume
-      if (ctx.state === 'suspended') ctx.resume();
+      if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
       return ctx;
     }
     function click(t, accent) {
@@ -734,13 +770,13 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
       taps.push(t); if (taps.length > 6) taps.shift();
       if (taps.length >= 2) { var s = 0; for (var i = 1; i < taps.length; i++) s += taps[i] - taps[i - 1]; setBpm(60000 / (s / (taps.length - 1))); }
     }
-    return { start: start, stop: stop, toggle: function () { running ? stop() : start(); }, setBpm: setBpm, getBpm: function () { return bpm; },
+    return { ctx: function () { return ctx; }, start: start, stop: stop, toggle: function () { running ? stop() : start(); }, setBpm: setBpm, getBpm: function () { return bpm; },
       setBeats: setBeats, tap: tap, gated: gated, clickNear: clickNear, ui: ui, isRunning: function () { return running; } };
   })();
   function readLevel() {
     if (!audio) return 0;
     if (audio.analyser.getFloatTimeDomainData) audio.analyser.getFloatTimeDomainData(audio.buf);
-    else { var b = new Uint8Array(audio.analyser.fftSize); audio.analyser.getByteTimeDomainData(b); for (var j = 0; j < b.length; j++) audio.buf[j] = (b[j] - 128) / 128; }
+    else { var b = audio.bbuf || (audio.bbuf = new Uint8Array(audio.analyser.fftSize)); audio.analyser.getByteTimeDomainData(b); for (var j = 0; j < b.length; j++) audio.buf[j] = (b[j] - 128) / 128; }
     var s = 0; for (var i = 0; i < audio.buf.length; i++) s += audio.buf[i] * audio.buf[i];
     return Math.sqrt(s / audio.buf.length);
   }
@@ -782,7 +818,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
       keepAwake(); show('practice'); render(false);
       tick = setInterval(step, 100);
     }).catch(function (e) {
-      $('micErr').textContent = 'I need the microphone to hear you play. ' + (e && e.name === 'NotAllowedError' ? 'Ask a grown-up to allow the microphone for this page in Settings › Safari.' : (e && e.message || ''));
+      $('micErr').textContent = 'I need the microphone to hear you play. ' + (e && e.name === 'NotAllowedError' ? (STANDALONE && IOSV !== null && IOSV < 14.3 ? 'Open this page in Safari to use the microphone.' : 'Ask a grown-up to allow the microphone for this page in Settings › Safari.') : (e && e.message || ''));
     });
   }
   function step() {
@@ -800,6 +836,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
     $('clock').style.color = playing ? 'var(--ink)' : '#B9AEF7';
     var st = $('status');
     if (playing) { st.className = 'status go'; st.textContent = '🎵 Playing — keep it up!'; }
+    else if (audio && audio.ctx.state === 'suspended') { st.className = 'status wait'; st.textContent = '👆 Tap the screen, then start playing!'; }
     else { st.className = 'status wait'; st.textContent = session.played < 1 ? '🎶 Start playing!' : '⏸ Paused - keep playing!'; }
     $('prog').style.width = Math.min(100, session.played / target * 100) + '%';
   }
@@ -880,16 +917,35 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
     $('sens').value = det.get('sensitivity'); $('sensVal').textContent = det.get('sensitivity');
     $('quiet').value = det.get('quietMs') / 1000; $('quietVal').textContent = det.get('quietMs') / 1000;
     $('logUrl').value = store.get('logUrl', '') || logUrl(); $('vidUrl').value = store.get('vidUrl', '');
-    updateQueueMsg(); updateLessonMsg(); checkServer(true); $('panel').classList.add('on');
+    updateQueueMsg(); updateLessonMsg(); checkServer(true); showCompatTip(); $('panel').classList.add('on');
     if (!session) startMic().then(function () { panelMic = true; (function live() { if (!panelMic || !audio) return; meter($('lvl2'), $('thr2'), det.update(readLevel(), performance.now())); setTimeout(live, 100); })(); }).catch(function () {});
+  }
+  function showCompatTip() {
+    var t = [];
+    if (!lsOk) t.push('Private Browsing is on, so settings and unsent sessions are forgotten when this page closes. Turn Private off in Safari.');
+    if (IOSV !== null && !navigator.wakeLock) t.push('This iPad can’t keep its own screen on during practice: set Settings › Display & Brightness › Auto-Lock to Never.');
+    if (IOSV !== null && STANDALONE && IOSV < 14.3) t.push('Opened from a Home Screen icon, this iPad blocks the microphone. Open the page in Safari instead.');
+    $('compatTip').textContent = t.join(' '); $('compatTip').style.display = t.length ? '' : 'none';
   }
   function closePanel() {
     store.set('logUrl', $('logUrl').value.trim()); store.set('vidUrl', $('vidUrl').value.trim());
     $('panel').classList.remove('on'); if (panelMic) { panelMic = false; if (!session) stopMic(); det.reset(); } srvV2 = null; flush(); flushLessons();
   }
+  // Press / release events: Pointer Events where available, else touch + mouse (iOS 12 has no Pointer Events).
+  var lastTouch = 0;
+  function onPress(el, down, up) {
+    if (window.PointerEvent) {
+      el.addEventListener('pointerdown', down);
+      ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { el.addEventListener(ev, up); });
+      return;
+    }
+    el.addEventListener('touchstart', function (e) { lastTouch = Date.now(); down(e); });
+    ['touchend', 'touchcancel'].forEach(function (ev) { el.addEventListener(ev, function (e) { lastTouch = Date.now(); up(e); }); });
+    el.addEventListener('mousedown', function (e) { if (Date.now() - lastTouch > 800) down(e); });
+    ['mouseup', 'mouseleave'].forEach(function (ev) { el.addEventListener(ev, function (e) { if (Date.now() - lastTouch > 800) up(e); }); });
+  }
   var g = $('gear');
-  g.addEventListener('pointerdown', function () { holdT = setTimeout(openPanel, 1000); });
-  ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (e) { g.addEventListener(e, function () { clearTimeout(holdT); }); });
+  onPress(g, function () { clearTimeout(holdT); holdT = setTimeout(openPanel, 1000); }, function () { clearTimeout(holdT); });
   $('sens').oninput = function () { var v = +this.value; det.set('sensitivity', v); store.set('sens', v); $('sensVal').textContent = v; };
   $('quiet').oninput = function () { var v = +this.value; det.set('quietMs', v * 1000); store.set('quietMs', v * 1000); $('quietVal').textContent = v; };
   $('calBtn').onclick = function () {
@@ -912,9 +968,8 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   function holdRepeat(el, d) {
     var t1 = null, t2 = null;
     function end() { clearTimeout(t1); clearInterval(t2); t1 = t2 = null; }
-    el.addEventListener('pointerdown', function (e) { e.preventDefault(); metro.setBpm(metro.getBpm() + d); end();
-      t1 = setTimeout(function () { t2 = setInterval(function () { metro.setBpm(metro.getBpm() + d); }, 80); }, 450); });
-    ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { el.addEventListener(ev, end); });
+    onPress(el, function (e) { e.preventDefault(); metro.setBpm(metro.getBpm() + d); end();
+      t1 = setTimeout(function () { t2 = setInterval(function () { metro.setBpm(metro.getBpm() + d); }, 80); }, 450); }, end);
   }
   holdRepeat($('mMinus'), -1); holdRepeat($('mPlus'), 1);
   metro.ui();
@@ -1056,7 +1111,9 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
     lesson.timer = setInterval(function () { if (lesson) $('lessonTime').textContent = fmt((Date.now() - lesson.startedAt) / 1000); }, 1000);
     if (!SR) {
       lesson.active = false; setLessonStatus('off');
-      $('lessonErr').textContent = 'This browser can’t turn speech into text. On the iPad, open this page in Safari (iPadOS 14.5 or newer) and turn on Settings › General › Keyboard › Enable Dictation. You can still type the notes yourself.';
+      $('lessonErr').textContent = (IOSV !== null && IOSV < 14.05)
+        ? 'Live notes need a newer iPad (iPadOS 14.5 or later), so this iPad can’t write down the teacher’s words. You can still type the notes: tap “Type notes instead”.'
+        : 'This browser can’t turn speech into text. On the iPad, open this page in Safari (iPadOS 14.5 or newer) and turn on Settings › General › Keyboard › Enable Dictation. You can still type the notes yourself.';
       $('lessonType').style.display = ''; $('lessonEnd').textContent = '← Back';
       return;
     }
@@ -1136,7 +1193,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   var KINDS = [['dynamics:louder', '🔊 Louder'], ['dynamics:softer', '🤫 Softer'], ['dynamics:cresc', '📈 Crescendo'], ['dynamics:decresc', '📉 Diminuendo'],
     ['dynamics:accent', '❗ Accents'], ['dynamics:', '🔊 Loud & soft (other)'], ['tempo:slower', '🐢 Slower'], ['tempo:faster', '🐇 Faster'], ['tempo:steady', '⏱️ Steady beat'],
     ['tempo:target', '⏱️ Tempo (BPM)'], ['rhythm:', '🥁 Counting & rhythm'], ['articulation:', '🎵 Articulation'], ['bowing:', '🎻 Bowing'], ['intonation:', '🎯 In tune'],
-    ['fingering:', '🖐️ Fingering'], ['hand:', '👐 Hand position'], ['posture:', '🪑 Posture'], ['pedal:', '🦶 Pedal'], ['repeat:', '🔁 Repeat it'], ['general:', '📝 Other']];
+    ['fingering:', '🖐️ Fingering'], ['hand:', '👐 Hand position'], ['posture:', ICON.posture + ' Posture'], ['pedal:', '🦶 Pedal'], ['repeat:', '🔁 Repeat it'], ['general:', '📝 Other']];
   var rv = null;
   function openReview(o) {
     var notes = o.notes ? JSON.parse(JSON.stringify(o.notes)) : parseLessonNotes(o.text || '', { instrument: o.kid.instrument });
@@ -1300,6 +1357,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
     if (nb) store.set('loudBase.' + s.kid.name, nb);
     $('nudge').classList.remove('on');
   }
+  if (IOSV !== null && IOSV < 14.05 && !SR) $('lessonHint').textContent = 'Grown-ups: tap 🎓 Lesson when the teacher starts, then type the teacher’s notes (live notes need a newer iPad).';
   renderKids(); flush(); flushLessons();
   window.__wpt = { metro: metro, det: det, KIDS: KIDS, logSession: logSession, getSession: function () { return session; },
     lessonsOf: lessonsOf, openKid: openKid, getLesson: function () { return lesson; }, checkServer: checkServer, store: store, getAudio: function () { return audio; } }; // for testing
