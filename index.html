@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="notes-off">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
@@ -16,12 +16,13 @@
   h1 { font-size:max(32px,min(6vw,60px)); font-size:clamp(32px,6vw,60px); margin:0 0 8px; }
   .sub { font-size:max(18px,min(2.6vw,26px)); font-size:clamp(18px,2.6vw,26px); color:var(--soft); margin:0 0 32px; }
   .kids { display:flex; flex-wrap:wrap; gap:24px; justify-content:center; }
-  .kid { border:0; border-radius:32px; width:min(28vw,280px); min-width:200px; padding:28px 16px; color:#fff; cursor:pointer;
+  /* Two columns on an iPad, one column on a phone. min() is not required (iOS 12). */
+  .kid { border:0; border-radius:32px; flex:1 1 46%; max-width:340px; min-width:230px; padding:20px 12px; color:#fff; cursor:pointer;
     font:inherit; box-shadow:0 10px 0 rgba(0,0,0,.15); transition:transform .1s; }
   .kid:active { transform:translateY(6px); box-shadow:0 4px 0 rgba(0,0,0,.15); }
-  .kid .emoji { font-size:72px; display:block; }
-  .kid .name { font-size:40px; font-weight:800; display:block; margin-top:8px; }
-  .kid .what { font-size:22px; opacity:.95; display:block; margin-top:4px; }
+  .kid .emoji { font-size:60px; display:block; }
+  .kid .name { font-size:34px; font-weight:800; display:block; margin-top:6px; }
+  .kid .what { font-size:20px; opacity:.95; display:block; margin-top:4px; }
   .who { font-size:max(26px,min(4vw,40px)); font-size:clamp(26px,4vw,40px); font-weight:800; margin-bottom:4px; }
   .clock { font-variant-numeric:tabular-nums; font-weight:900; font-size:max(110px,min(24vw,260px)); font-size:clamp(110px,24vw,260px); line-height:1; letter-spacing:-2px; margin:8px 0; transition:color .3s; }
   .status { font-size:max(24px,min(4vw,40px)); font-size:clamp(24px,4vw,40px); font-weight:800; padding:12px 28px; border-radius:999px; margin:8px 0 18px; }
@@ -125,6 +126,8 @@
   .no-flexgap .tn > * + * { margin-left:14px; }
   .no-flexgap .rv .r1 > * { margin:4px; }
   .no-flexgap .coach > * { margin:6px; }
+  /* Lesson notes and louder/softer coaching are turned off (class is on <html>). */
+  .notes-off .notes-ui { display:none !important; }
 </style>
 <script>
 // Feature test: flexbox gap (Safari 14.1+). If missing, <html class="no-flexgap"> turns on the margin fallback above.
@@ -142,11 +145,13 @@
 <button class="gear" id="gear" aria-label="Parent settings">⚙️</button>
 
 <!-- 1. Pick who is practicing -->
-<section class="screen on" id="pick">
+<section class="screen scroll on" id="pick">
+  <div class="wrap">
   <h1>Who's practicing?</h1>
-  <p class="sub">Tap your name, then tap Start.</p>
+  <p class="sub">Tap your name and instrument, then tap Start.</p>
   <div class="kids" id="kids"></div>
   <p class="note">The clock only runs while your instrument is playing. 🎶</p>
+  </div>
 </section>
 
 <!-- 2. Ready -->
@@ -157,9 +162,9 @@
   <div class="clock" id="readyClock"></div>
   <button class="btn big" id="startBtn">▶ Start</button>
   <p class="err" id="micErr"></p>
-  <div class="tnotes" id="readyNotes"></div>
-  <div class="row"><button class="btn lesson" id="lessonBtn">🎓 Lesson</button></div>
-  <p class="small" id="lessonHint">Grown-ups: tap 🎓 Lesson when the teacher starts, and the iPad writes down what the teacher says.</p>
+  <div class="tnotes notes-ui" id="readyNotes"></div>
+  <div class="row notes-ui"><button class="btn lesson" id="lessonBtn">🎓 Lesson</button></div>
+  <p class="small notes-ui" id="lessonHint">Grown-ups: tap 🎓 Lesson when the teacher starts, and the iPad writes down what the teacher says.</p>
   </div>
 </section>
 
@@ -171,8 +176,8 @@
   <div class="status wait" id="status">Start playing!</div>
   <div class="bar"><div id="prog"></div></div>
   <div class="meter" title="sound level"><div id="lvl"></div><i id="thr"></i></div>
-  <div class="nudge" id="nudge"></div>
-  <div class="coach" id="coach"></div>
+  <div class="nudge notes-ui" id="nudge"></div>
+  <div class="coach notes-ui" id="coach"></div>
   <div class="row"><button class="btn alt" id="metroToggle">🥁 Metronome</button><button class="btn done" id="doneBtn">I'm done for now</button></div>
   <div class="metro" id="metro" style="display:none">
     <div class="mrow">
@@ -209,7 +214,7 @@
 </section>
 
 <!-- 6. Lesson: listen and write down what the teacher says -->
-<section class="screen scroll" id="lesson">
+<section class="screen scroll notes-ui" id="lesson">
   <div class="wrap">
   <div class="who" id="lessonWho"></div>
   <div class="status go" id="lessonStatus">🎤 Listening to lesson…</div>
@@ -222,7 +227,7 @@
 </section>
 
 <!-- 7. Review lesson notes (grown-up) -->
-<section class="screen scroll" id="review">
+<section class="screen scroll notes-ui" id="review">
   <div class="wrap"><div class="review">
   <h1 style="font-size:36px">Lesson notes ✏️</h1>
   <p class="small" id="reviewSub" style="font-size:17px"></p>
@@ -236,10 +241,10 @@
 <!-- Parent settings -->
 <div class="panel" id="panel"><div class="sheet">
   <h2>Parent settings</h2>
-  <p class="small">During practice, sound is checked live on this iPad to see if an instrument is playing (and how loud and how fast). No sound is recorded or uploaded; only minutes and a short coaching summary are logged. In 🎓 Lesson mode, only the words (text) are saved, here and to the Sheet.</p>
+  <p class="small">During practice, sound is checked live on this iPad to see if an instrument is playing. No sound is recorded or uploaded; only practice minutes are logged.</p>
   <label>Sensitivity: <span id="sensVal"></span></label>
   <input type="range" id="sens" min="1" max="10" step="1">
-  <p class="small">Higher = soft playing counts. Lower = only clear playing counts (if talking or room noise is counting, turn it down).</p>
+  <p class="small">Higher means quiet playing still counts. Lower means only louder playing counts. Leave this in the middle unless soft playing is missed or the room is very noisy. The clock also listens for a musical tone, so TV, doors, and most room noise do not count. A voice right next to the iPad can still sometimes count, because talking has a pitch too.</p>
   <label>Pause after this many seconds of quiet: <span id="quietVal"></span></label>
   <input type="range" id="quiet" min="1.5" max="6" step="0.5">
   <div class="row" style="justify-content:flex-start;margin-top:14px">
@@ -248,37 +253,260 @@
   </div>
   <label>Live level</label>
   <div class="meter" style="width:100%;margin-top:4px"><div id="lvl2"></div><i id="thr2"></i></div>
-  <p class="small">The bar should jump past the line when someone plays, and stay left of it when the room is quiet.</p>
+  <p class="small">The line is loudness only. The bar should jump past it when someone plays, and stay left of it when the room is quiet. A loud TV can cross the line without starting the clock, because it does not sound like an instrument.</p>
   <label>Google Sheet logging address</label>
   <input type="url" id="logUrl" placeholder="https://script.google.com/macros/s/…/exec">
   <label>Celebration video address</label>
   <input type="url" id="vidUrl" placeholder="celebrate.mp4">
   <p class="small" id="compatTip" style="display:none"></p>
   <p class="small" id="queueMsg"></p>
-  <p class="small" id="lessonSyncMsg"></p>
-  <div class="row" style="justify-content:flex-start;margin-top:4px"><button class="btn alt" id="resetBase" style="font-size:16px;padding:10px 16px">Reset "usual loudness" for all kids</button></div>
+  <p class="small notes-ui" id="lessonSyncMsg"></p>
   <div class="row" style="justify-content:flex-end"><button class="btn alt" id="testLogBtn" style="font-size:18px;padding:12px 20px">Send test row</button><button class="btn big" id="closePanel" style="font-size:22px;padding:14px 30px">Save</button></div>
 </div></div>
 
 <script>
 // Practice sound detector: pure logic, no audio APIs, so it can be unit-tested.
-// Feed it one loudness reading (RMS, 0..1) per frame (~10 frames/sec).
+// Feed it one loudness reading (RMS, 0..1) per frame (~10 frames/sec), and optionally
+// a tone verdict from analyzeTone() (the FFT shape). A frame counts as playing only
+// when it is loud enough AND, if a verdict was passed, looks like a musical tone.
+// Omit the verdict and it stays a volume gate (the parent level meter uses that).
+//
+// Does this FFT frame look like a musical tone?
+// bytes: AnalyserNode.getByteFrequencyData (0..255). iOS 12 has that call.
+// getFloatFrequencyData is not used — it is missing on some older Safari builds.
+// Bin i is frequency i * sampleRate / fftSize, mapped from the analyser's minDb..maxDb
+// (we set -100..-30, about 0.27 dB per step).
+//
+// A tone needs a narrow peak, low spectral flatness (energy on a few frequencies,
+// not spread out like noise), and harmonic support: a 2nd or 3rd harmonic, a
+// harmonic-product peak, or a spectrum so peaked it is basically a sine.
+//
+// Piano / violin / trumpet ranges only nudge WHICH harmonic we call the fundamental
+// (a trumpet's 2nd harmonic is often louder than the 1st). A clear tone outside
+// that range still counts, so a high violin note or a low piano note is not rejected.
+//
+// Honest limit: speech is harmonic too, so someone talking right next to the iPad
+// can still sometimes count. Broadband noise, thumps, and most TV chatter fail the
+// flatness and narrow-peak checks much more often than a volume threshold alone.
+function analyzeTone(bytes, opts) {
+  opts = opts || {};
+  var sampleRate = opts.sampleRate || 44100;
+  var fftSize = opts.fftSize || ((bytes && bytes.length) ? bytes.length * 2 : 2048);
+  var minDb = opts.minDb === undefined ? -100 : opts.minDb;
+  var maxDb = opts.maxDb === undefined ? -30 : opts.maxDb;
+  var instrument = opts.instrument || '';
+  var empty = { tonal: false, score: 0, flatness: 1, prominence: 0, hpsProm: 0, harmonic: 0, peakHz: 0, f0: 0, width: 0, contrastDb: 0 };
+  var n = bytes ? bytes.length : 0;
+  var binHz = fftSize ? sampleRate / fftSize : 0;
+  if (!n || !(binHz > 0) || !(maxDb > minDb)) return empty;
+
+  var table = analyzeTone._pow;
+  if (!table || table.min !== minDb || table.max !== maxDb) {
+    table = analyzeTone._pow = { min: minDb, max: maxDb, t: new Array(256) };
+    for (var ti = 0; ti < 256; ti++) {
+      table.t[ti] = Math.pow(10, (minDb + (ti / 255) * (maxDb - minDb)) / 10);
+    }
+  }
+  function powAt(b) {
+    var x = b | 0;
+    if (x < 0) x = 0;
+    else if (x > 255) x = 255;
+    return table.t[x];
+  }
+  var dbPerByte = (maxDb - minDb) / 255;
+  var drop6 = 6 / dbPerByte; // bytes that equal about 6 dB
+
+  // Student-sized fundamental ranges. Preference only — never a hard gate.
+  var prefer = ({ Piano: { lo: 80, hi: 2200 }, Violin: { lo: 190, hi: 3200 }, Trumpet: { lo: 145, hi: 1600 } })[instrument] || null;
+
+  var iMax = Math.min(n - 1, Math.floor((sampleRate * 0.46) / binHz));
+  if (iMax < 16) return empty;
+  var iFlat0 = Math.max(1, Math.round(80 / binHz));
+  var iFlat1 = Math.min(iMax, Math.round(5000 / binHz));
+  if (iFlat1 <= iFlat0 + 8) return empty;
+
+  var scratch = analyzeTone._s || (analyzeTone._s = { pwr: [], bytes: [], pows: [] });
+  var pwr = scratch.pwr;
+  if (pwr.length < iMax + 1) pwr.length = iMax + 1;
+  var peakB = 0, peakI = iFlat0;
+  for (var i = 1; i <= iMax; i++) {
+    var bv = bytes[i] || 0;
+    pwr[i] = powAt(bv);
+    if (i >= iFlat0 && i <= iFlat1 && bv > peakB) { peakB = bv; peakI = i; }
+  }
+
+  // Spectral flatness, 80 Hz–5 kHz. A tiny epsilon keeps silent bins from
+  // pulling the geometric mean to zero (that would call silence "perfectly tonal").
+  var eps = table.t[1];
+  var sum = 0, logSum = 0, count = 0;
+  var ordB = scratch.bytes, ordP = scratch.pows, oN = 0;
+  for (var j = iFlat0; j <= iFlat1; j++) {
+    var p = pwr[j] + eps;
+    sum += p;
+    logSum += Math.log(p);
+    ordB[oN] = bytes[j] || 0;
+    ordP[oN] = p;
+    oN++;
+    count++;
+  }
+  ordB.length = oN;
+  ordP.length = oN;
+  var sortedB = ordB.slice(0, oN).sort(function (a, b) { return a - b; });
+  var sortedP = ordP.slice(0, oN).sort(function (a, b) { return a - b; });
+  var medB = sortedB[oN >> 1] || 0;
+  var medP = sortedP[oN >> 1] || eps;
+  var arith = sum / count;
+  var flatness = arith > 0 ? Math.exp(logSum / count) / arith : 1;
+  var prominence = ((pwr[peakI] || 0) + eps) / medP;
+  var contrastDb = (peakB - medB) * dbPerByte;
+
+  // Width of the strongest peak. A musical partial is a few bins wide;
+  // noise and thumps stay loud across many neighbours.
+  var width = 1, pk = bytes[peakI] || 0;
+  for (var a = peakI - 1; a >= 1 && (bytes[a] || 0) >= pk - drop6; a--) width++;
+  for (var b2 = peakI + 1; b2 <= iMax && (bytes[b2] || 0) >= pk - drop6; b2++) width++;
+
+  // Harmonic product spectrum. Search fundamentals up to ~2.2 kHz so the
+  // 3rd harmonic still lands inside the FFT. Higher notes are still caught
+  // by the raw peak and its own harmonics below.
+  var fLo = Math.max(1, Math.round(60 / binHz));
+  var fHi = Math.min(Math.floor(iMax / 3), Math.round(2200 / binHz));
+  var hpsBest = 0, hpsI = 0, hpsBand = 0, hpsBandI = 0, hpsN = 0;
+  var hpsOrd = analyzeTone._h || (analyzeTone._h = []);
+  for (var k = fLo; k <= fHi; k++) {
+    var h = pwr[k] * pwr[k * 2] * pwr[k * 3];
+    hpsOrd[hpsN++] = h;
+    if (h > hpsBest) { hpsBest = h; hpsI = k; }
+    if (prefer) {
+      var hzK = k * binHz;
+      if (hzK >= prefer.lo && hzK <= prefer.hi && h > hpsBand) { hpsBand = h; hpsBandI = k; }
+    }
+  }
+  var hpsProm = 1;
+  if (hpsN && hpsBest > 0) {
+    var hpsSorted = hpsOrd.slice(0, hpsN).sort(function (a, b) { return a - b; });
+    var hpsMed = hpsSorted[hpsSorted.length >> 1] || eps;
+    if (hpsMed > 0) hpsProm = hpsBest / hpsMed;
+  }
+  var peakHz = peakI * binHz;
+  // Default to the loudest partial. That is stable for a sine and for a high
+  // note above the fundamental search. Switch to the harmonic-product guess
+  // only when it is a clearly better explanation (a trumpet whose 2nd harmonic
+  // is louder than the fundamental). An in-range candidate wins ties so the
+  // guess stays on the instrument's usual notes when both are plausible.
+  var f0 = peakHz;
+  var hpsAtPeak = 0;
+  if (peakI >= fLo && peakI <= fHi && peakI * 3 <= iMax) hpsAtPeak = pwr[peakI] * pwr[peakI * 2] * pwr[peakI * 3];
+  if (hpsProm >= 8 && hpsI > 0 && hpsBest > 0 && !(hpsAtPeak >= hpsBest * 0.3)) {
+    var chosen = hpsI;
+    if (prefer && hpsBandI && hpsBand >= hpsBest * 0.35) chosen = hpsBandI;
+    var hpsHz = chosen * binHz;
+    var ratio = hpsHz > 0 ? peakHz / hpsHz : 0;
+    var linesUp = false;
+    for (var mult = 1; mult <= 3; mult++) if (Math.abs(ratio / mult - 1) <= 0.08) linesUp = true;
+    if (linesUp && hpsHz > 0) f0 = hpsHz;
+  }
+
+  function localPeak(hz) {
+    if (!(hz > 0)) return 0;
+    var c = Math.round(hz / binHz);
+    if (c < 3 || c > iMax - 3) return 0;
+    // The harmonic can sit one bin off the arithmetic multiple (bin rounding).
+    // The bin we expected still has to be part of that peak, so a different
+    // spike nearby does not count.
+    var bestC = c;
+    if ((bytes[c - 1] || 0) > (bytes[bestC] || 0)) bestC = c - 1;
+    if ((bytes[c + 1] || 0) > (bytes[bestC] || 0)) bestC = c + 1;
+    var v = bytes[bestC] || 0;
+    var at = bytes[c] || 0;
+    if (at + drop6 < v) return 0;
+    if (bestC < 2 || bestC > iMax - 2) return 0;
+    var left = bytes[bestC - 2] || 0, right = bytes[bestC + 2] || 0;
+    var nb = left > right ? left : right;
+    if (v >= nb + drop6 && v >= medB + drop6) return 1;
+    if (v >= nb + drop6 * 0.5 && v >= medB + drop6 * 0.5) return 0.5;
+    return 0;
+  }
+  var harmonic = localPeak(f0 * 2);
+  var h3 = localPeak(f0 * 3); if (h3 > harmonic) harmonic = h3;
+  var rp2 = localPeak(peakHz * 2); if (rp2 > harmonic) harmonic = rp2;
+  var rp3 = localPeak(peakHz * 3); if (rp3 > harmonic) harmonic = rp3;
+
+  // How many separate peaks stick up? A sine has one. A chord or a trumpet has
+  // several, lined up as harmonics. A handful of unrelated spikes is not music.
+  var nPeaks = 0;
+  var minPeakB = medB + drop6 * 0.75;
+  for (var pi = iFlat0 + 1; pi <= iFlat1 - 1; pi++) {
+    var pv = bytes[pi] || 0;
+    if (pv < minPeakB) continue;
+    if (pv < (bytes[pi - 1] || 0) || pv < (bytes[pi + 1] || 0)) continue;
+    var shoulder = false;
+    for (var sd = 1; sd <= 3; sd++) {
+      if ((bytes[pi - sd] || 0) > pv + drop6 * 0.35 || (bytes[pi + sd] || 0) > pv + drop6 * 0.35) shoulder = true;
+    }
+    if (!shoulder) nPeaks++;
+  }
+
+  var narrow = width <= 12;
+  var flatOk = flatness <= 0.4;
+  var promOk = prominence >= 5 && contrastDb >= 7;
+  // A pure sine has no harmonic peaks, but it is one narrow spike. Several
+  // spikes with no harmonic relationship (clatter, a noisy room) do not pass.
+  var harmOk = harmonic >= 0.5 || (flatness <= 0.14 && nPeaks <= 2);
+  var tonal = !!(narrow && flatOk && promOk && harmOk && peakB > medB);
+
+  var score = 0;
+  if (narrow) score += 0.25;
+  if (flatOk) score += 0.25;
+  if (promOk) score += 0.2;
+  if (harmonic >= 0.5) score += 0.15;
+  if (hpsProm >= 12) score += 0.1;
+  if (flatness <= 0.14) score += 0.05;
+  if (score > 1) score = 1;
+
+  return {
+    tonal: tonal, score: Math.round(score * 100) / 100, flatness: flatness, prominence: prominence,
+    hpsProm: hpsProm, harmonic: harmonic, peakHz: peakHz, f0: f0, width: width, contrastDb: contrastDb
+  };
+}
+
 function createDetector(opts) {
   var o = Object.assign({
     sensitivity: 5,     // 1 (only loud playing counts) .. 10 (soft playing counts)
     quietMs: 2500,      // pause after this long with no instrument sound
-    startFrames: 3,     // need this many loud frames out of the last 5 to (re)start
+    startFrames: 3,     // need this many musical frames out of the last 5 to (re)start
     absMin: 0.004,      // never count anything quieter than this (at sensitivity 5)
     steadyCv: 0.05,     // a sound this steady for steadyMs is a fan/dishwasher, not music
     steadyMs: 4000
   }, opts || {});
   var floor = null, playing = false, lastSoundAt = -1e9, recent = [], hist = [];
+  var lastF0 = 0, pendingF0 = 0, silence = 0;
   function threshold() {
     var mult = 1.4 + (10 - o.sensitivity) * 0.5;      // 1.4x .. 5.9x the room noise
     var minAbs = o.absMin * (11 - o.sensitivity) / 6;
     return Math.max((floor || 0) * mult, minAbs);
   }
-  function update(level, nowMs, gated) {
+  // Same note, or one octave off (fundamental vs a strong 2nd harmonic).
+  // Farther octave slips are not folded: random peaks would match too often.
+  function samePitch(a, b) {
+    if (!(a > 0) || !(b > 0)) return false;
+    var r = a > b ? a / b : b / a;
+    if (r > 2.3) return false;
+    if (r >= 1.78) r = r / 2;
+    return r <= 1.123;
+  }
+  // tone is omitted → volume only. Otherwise the pitch must agree for two frames
+  // so a one-off noise peak does not count. Real notes settle; random peaks do not.
+  function pitchOk(tone) {
+    if (!tone || typeof tone.tonal !== 'boolean') return true;
+    if (!tone.tonal || !(tone.f0 > 0)) return false;
+    if (samePitch(tone.f0, lastF0) || samePitch(tone.f0, pendingF0)) {
+      lastF0 = tone.f0; pendingF0 = 0; return true;
+    }
+    pendingF0 = tone.f0;
+    return false;
+  }
+  function update(level, nowMs, gated, tone) {
     // gated = a metronome click may be in this mic frame: treat as no sound, and
     // don't let it touch the background level, the steady-noise history or the start count.
     if (gated) {
@@ -288,15 +516,21 @@ function createDetector(opts) {
     if (floor === null) floor = level;
     hist.push({ t: nowMs, v: level });
     while (hist.length && nowMs - hist[0].t > o.steadyMs) hist.shift();
-    var loud = level > threshold();
+    var volLoud = level > threshold();
     if (level < floor) floor = floor * 0.7 + level * 0.3;          // quieter room: adapt fast
-    else if (!loud) floor = floor * 0.99 + level * 0.01;           // background creeping up: adapt slowly
+    else if (!volLoud) floor = floor * 0.99 + level * 0.01;        // background creeping up: adapt slowly
     // Steady-noise guard: music rises and falls; an appliance hum does not.
-    if (loud && hist.length > 10 && nowMs - hist[0].t >= o.steadyMs * 0.9) {
+    // A pure hum can look tonal, so this still rejects a few seconds of fan/fridge.
+    if (volLoud && hist.length > 10 && nowMs - hist[0].t >= o.steadyMs * 0.9) {
       var m = 0; hist.forEach(function (h) { m += h.v; }); m /= hist.length;
       var s = 0; hist.forEach(function (h) { s += (h.v - m) * (h.v - m); }); s = Math.sqrt(s / hist.length);
-      if (m > 0 && s / m < o.steadyCv) { floor = m; loud = false; }
+      if (m > 0 && s / m < o.steadyCv) { floor = m; volLoud = false; }
     }
+    if (!volLoud) {
+      silence++;
+      if (silence >= 8) { lastF0 = 0; pendingF0 = 0; } // ~0.8 s of quiet: next note confirms fresh
+    } else silence = 0;
+    var loud = volLoud && pitchOk(tone);
     recent.push(loud); if (recent.length > 5) recent.shift();
     if (loud) lastSoundAt = nowMs;
     if (!playing && recent.filter(Boolean).length >= o.startFrames) playing = true;
@@ -308,10 +542,10 @@ function createDetector(opts) {
     set: function (k, v) { o[k] = v; },
     get: function (k) { return o[k]; },
     calibrate: function (quietLevel) { floor = quietLevel; },
-    reset: function () { playing = false; recent = []; hist = []; lastSoundAt = -1e9; }
+    reset: function () { playing = false; recent = []; hist = []; lastSoundAt = -1e9; lastF0 = 0; pendingF0 = 0; silence = 0; }
   };
 }
-if (typeof module !== 'undefined') module.exports = { createDetector: createDetector };
+if (typeof module !== 'undefined') module.exports = { createDetector: createDetector, analyzeTone: analyzeTone };
 
 </script>
 <script id="coach-logic">
@@ -636,11 +870,16 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
 <script>
 (function () {
   // ---------- Config ----------
+  // Two cards can share a name. Each session logs this object's name AND instrument.
+  // Lesson notes are off, so per-name note storage is not used.
   var KIDS = [
     { name: 'Abram', instrument: 'Piano',  minutes: 40, emoji: '🎹', color: '#7C6CF2' },
+    { name: 'Abram', instrument: 'Trumpet', minutes: 20, emoji: '🎺', color: '#C46E1A' },
     { name: 'Eden',  instrument: 'Piano',  minutes: 20, emoji: '🎹', color: '#F06292' },
     { name: 'Ellis', instrument: 'Violin', minutes: 25, emoji: '🎻', color: '#26A69A' }
   ];
+  var NOTES_ON = false;      // hide lesson notes, listening, and review; minute logging stays
+  var LOUD_COACH_ON = false; // no louder/softer prompts, summaries, or "usual loudness"
   var DEFAULT_LOG_URL = 'https://script.google.com/macros/s/AKfycbyrQFq9aeZiwDeV-N7UFdkFFm03anLJu8McENo7iP0UZUT8_DBu7oRvxHaYAZdhRmIN/exec';
   var DEFAULT_VIDEO = '__VIDEO_URL__';
   // Old iOS: Private Browsing (and some quota errors) make localStorage throw, so keep a copy in memory too.
@@ -676,7 +915,11 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
         var Ctx = window.AudioContext || window.webkitAudioContext; var ctx = new Ctx();
         var src = ctx.createMediaStreamSource(stream);
         var hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 60;   // ignore rumble / thumps
-        var analyser = ctx.createAnalyser(); analyser.fftSize = 2048;
+        var analyser = ctx.createAnalyser();
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0.6; // a note shows up within a couple of ticks; one wild FFT does not flicker
+        analyser.minDecibels = -100;          // byte 0..255 matches analyzeTone's default map
+        analyser.maxDecibels = -30;
         src.connect(hp); hp.connect(analyser);  // never connected to speakers, never recorded
         // Small block tap for tempo (note-onset) detection. Its output goes through a muted gain: silent, nothing stored.
         var sp = null;
@@ -780,6 +1023,24 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
     var s = 0; for (var i = 0; i < audio.buf.length; i++) s += audio.buf[i] * audio.buf[i];
     return Math.sqrt(s / audio.buf.length);
   }
+  // One FFT snapshot for the tone check. Nothing is stored or uploaded — the array is reused.
+  function readTone(instrument) {
+    if (!audio || !audio.analyser || !audio.analyser.getByteFrequencyData) return { tonal: false, f0: 0, score: 0 };
+    try {
+      var an = audio.analyser, bins = an.frequencyBinCount;
+      if (!audio.freq || audio.freq.length !== bins) audio.freq = new Uint8Array(bins);
+      an.getByteFrequencyData(audio.freq);
+      return analyzeTone(audio.freq, {
+        sampleRate: audio.ctx.sampleRate || 44100,
+        fftSize: an.fftSize,
+        minDb: an.minDecibels,
+        maxDb: an.maxDecibels,
+        instrument: instrument || ''
+      });
+    } catch (e) {
+      return { tonal: false, f0: 0, score: 0 };
+    }
+  }
   function meter(lvlEl, thrEl, r) {
     var scale = function (v) { return Math.min(100, Math.max(0, (Math.log10(Math.max(v, 1e-4)) + 4) / 3.5 * 100)); };
     lvlEl.style.width = scale(r.level) + '%'; thrEl.style.left = scale(r.threshold) + '%';
@@ -789,7 +1050,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   var wake = null;
   function keepAwake() { try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(function (w) { wake = w; }).catch(function () {}); } catch (e) {} }
   function releaseAwake() { try { wake && wake.release(); } catch (e) {} wake = null; }
-  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible' && (session || lesson)) { keepAwake(); if (lesson && lesson.active && !lesson.rec) recStart(); } });
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible' && (session || (NOTES_ON && lesson))) { keepAwake(); if (NOTES_ON && lesson && lesson.active && !lesson.rec) recStart(); } });
 
   // ---------- Session ----------
   var kid = null, session = null, tick = null;
@@ -805,16 +1066,22 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   }
   function openKid(k) {
     kid = k; $('readyWho').textContent = k.emoji + ' ' + k.name + ' · ' + k.instrument; $('readyClock').textContent = fmt(k.minutes * 60); $('micErr').textContent = '';
-    renderNotes(k); show('ready'); $('ready').scrollTop = 0;
-    pullLessons(k).then(function (changed) { if (changed && kid === k && $('ready').classList.contains('on')) renderNotes(k); });
+    if (NOTES_ON) {
+      renderNotes(k);
+      pullLessons(k).then(function (changed) { if (changed && kid === k && $('ready').classList.contains('on')) renderNotes(k); });
+    } else if ($('readyNotes')) {
+      $('readyNotes').innerHTML = '';
+      $('ready').classList.remove('hasnotes');
+    }
+    show('ready'); $('ready').scrollTop = 0;
   }
   function begin() {
     $('micErr').textContent = '';
     startMic().then(function () {
       det.reset();
       session = { kid: kid, startedAt: new Date(), played: 0, last: performance.now(), done: false };
-      $('pracWho').textContent = kid.emoji + ' ' + kid.name;
-      setupCoach(session);
+      $('pracWho').textContent = kid.emoji + ' ' + kid.name + ' · ' + kid.instrument;
+      if (NOTES_ON) setupCoach(session);
       keepAwake(); show('practice'); render(false);
       tick = setInterval(step, 100);
     }).catch(function (e) {
@@ -823,7 +1090,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   }
   function step() {
     var now = performance.now(), dt = Math.min(0.5, (now - session.last) / 1000); session.last = now;
-    var r = det.update(readLevel(), now, metro.gated(audio ? audio.analyser.fftSize / audio.ctx.sampleRate : 0.05));
+    var r = det.update(readLevel(), now, metro.gated(audio ? audio.analyser.fftSize / audio.ctx.sampleRate : 0.05), readTone(session.kid && session.kid.instrument));
     if (r.playing) session.played += dt;
     coachStep(r, now, dt);
     meter($('lvl'), $('thr'), r); if ($('panel').classList.contains('on')) meter($('lvl2'), $('thr2'), r);
@@ -866,7 +1133,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
       start: pad(d.getHours()) + ':' + pad(d.getMinutes()),
       kid: s.kid.name, instrument: s.kid.instrument, target: s.kid.minutes,
       actual: Math.round(s.played / 60 * 10) / 10, completed: completed ? 'Yes' : 'No',
-      length: Math.round((end - d) / 60000 * 10) / 10, id: d.getTime() + '-' + s.kid.name,
+      length: Math.round((end - d) / 60000 * 10) / 10, id: d.getTime() + '-' + s.kid.name + '-' + (s.kid.instrument || ''),
       coaching: s.coaching || ''
     };
     var q = store.get('queue', []); q.push(row); store.set('queue', q); flush();
@@ -954,7 +1221,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   };
   $('testLogBtn').onclick = function () { store.set('logUrl', $('logUrl').value.trim()); logSession({ kid: { name: 'TEST', instrument: 'Test', minutes: 0 }, startedAt: new Date(), played: 0 }, false); $('queueMsg').textContent = 'Test row sent — check the Sheet (delete the TEST row after).'; };
   $('closePanel').onclick = closePanel;
-  $('resetBase').onclick = function () { KIDS.forEach(function (k) { store.set('loudBase.' + k.name, null); }); this.textContent = 'Done ✓ (it re-learns over the next sessions)'; };
+  if ($('resetBase')) $('resetBase').onclick = function () { KIDS.forEach(function (k) { store.set('loudBase.' + k.name, null); }); this.textContent = 'Done ✓ (it re-learns over the next sessions)'; };
 
   // ---------- Wire up ----------
   $('backBtn').onclick = function () { show('pick'); };
@@ -1048,6 +1315,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   }
   function updateLessonMsg() {
     var el = $('lessonSyncMsg'); if (!el) return;
+    if (!NOTES_ON) { el.textContent = ''; return; }
     var n = store.get('lessonQueue', []).length;
     if (!logUrl()) el.textContent = 'Lesson notes are saved on this iPad.';
     else if (n && srvV2 === false) el.textContent = n + ' lesson(s) saved on this iPad. To also save them to the Sheet (and other devices), update the Apps Script to the new Code.gs and deploy a new version.';
@@ -1081,6 +1349,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
     if (l) openReview({ kid: kid, id: l.id, ts: l.ts, text: l.transcript || '', notes: l.notes, existing: true, minutes: l.minutes });
   });
   function renderDraftBar() {
+    if (!NOTES_ON) { var gone = $('draftbar'); if (gone && gone.parentNode) gone.parentNode.removeChild(gone); return; }
     var d = store.get('lessonDraft', null), old = $('draftbar'); if (old) old.parentNode.removeChild(old);
     if (!d || !d.text || lesson) return;
     var k = KIDS.filter(function (x) { return x.name === d.kid; })[0]; if (!k) return;
@@ -1100,6 +1369,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
     el.className = m[0]; el.textContent = m[1];
   }
   function startLesson() {
+    if (!NOTES_ON) return;
     var k = kid; if (!k) return;
     stopMic(); if (panelMic) panelMic = false;
     lesson = { kid: k, startedAt: new Date(), finals: [], sess: {}, active: true, restarts: [], fatal: null, rec: null, savedAt: 0 };
@@ -1196,6 +1466,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
     ['fingering:', '🖐️ Fingering'], ['hand:', '👐 Hand position'], ['posture:', ICON.posture + ' Posture'], ['pedal:', '🦶 Pedal'], ['repeat:', '🔁 Repeat it'], ['general:', '📝 Other']];
   var rv = null;
   function openReview(o) {
+    if (!NOTES_ON) return;
     var notes = o.notes ? JSON.parse(JSON.stringify(o.notes)) : parseLessonNotes(o.text || '', { instrument: o.kid.instrument });
     rv = { kid: o.kid, id: o.id || (o.ts + '-' + o.kid.name), ts: o.ts, text: o.text || '', notes: notes, existing: !!o.existing, minutes: o.minutes || 0 };
     renderReview(); show('review'); $('review').scrollTop = 0;
@@ -1273,10 +1544,12 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
 
   // ======================= Coaching during practice =======================
   function setupCoach(s) {
+    if (!NOTES_ON) return; // reminders and tempo-from-notes stay off; the metronome button still works
     var L = latestLesson(s.kid.name), notes = (L && L.notes) || [], ch = activeChecks(notes), base = store.get('loudBase.' + s.kid.name, null);
+    if (!LOUD_COACH_ON) ch.loud = null; // louder/softer coaching is removed even if notes are turned back on
     var est = createTempoEstimator();
     var c = s.coach = { lessonId: L ? L.id : null, notes: notes, loudNote: ch.loud, tempoNote: ch.tempo, base: base,
-      loud: createLoudCoach({ dir: ch.loud ? ch.loud.dir : null, baseline: base }), est: est, onset: createOnsetDetector({ onGate: est.addGate }),
+      loud: createLoudCoach({ dir: (LOUD_COACH_ON && ch.loud) ? ch.loud.dir : null, baseline: LOUD_COACH_ON ? base : null }), est: est, onset: createOnsetDetector({ onGate: est.addGate }),
       tempo: { checks: 0, ok: 0, nudges: 0, lastNudge: -1e9, offSince: null, lastYou: null }, banner: { msg: '', until: 0 }, done: {}, lastEstAt: 0, playing: false };
     onAudioBlock = ch.tempo ? function (buf, t0, sr) {
       if (!session || session.coach !== c) return;
@@ -1288,7 +1561,7 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   function reminders(c) { return c.notes.filter(function (n) { return n !== c.loudNote && n !== c.tempoNote; }); }
   function renderCoach(c) {
     var box = $('coach'), html = '';
-    if (c.loudNote) html += '<div class="cc" id="ccLoud"><div class="t">' + noteIcon(c.loudNote) + ' ' + esc(c.loudNote.text) + '</div><div class="st"></div></div>';
+    if (LOUD_COACH_ON && c.loudNote) html += '<div class="cc" id="ccLoud"><div class="t">' + noteIcon(c.loudNote) + ' ' + esc(c.loudNote.text) + '</div><div class="st"></div></div>';
     if (c.tempoNote) html += '<div class="cc" id="ccTempo"><div class="t">' + noteIcon(c.tempoNote) + ' ' + esc(c.tempoNote.text) + '</div><div class="st"></div>' +
       '<button class="setm" id="ccSetM">🥁 Set metronome to ' + c.tempoNote.bpm + '</button></div>';
     reminders(c).slice(0, 8).forEach(function (n) {
@@ -1308,8 +1581,9 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
     var c = session && session.coach; if (!c) return;
     c.playing = r.playing;
     var t = nowMs / 1000, active = !!(r.playing && r.loud && !r.gated);
-    var lr = c.loud.frame(r.level, active, t, dt);
-    if (c.loudNote) {
+    var lr = { nudge: '', state: 'off' };
+    if (LOUD_COACH_ON && c.loud) lr = c.loud.frame(r.level, active, t, dt);
+    if (LOUD_COACH_ON && c.loudNote) {
       var louder = c.loudNote.dir === 'louder';
       var m = { learning: ['', '🎤 Still learning how loud you usually play'], listening: ['', r.playing ? '👂 Listening…' : ''],
         met: ['met', louder ? '✓ Yes! That’s louder than usual' : '✓ Yes! Nice and gentle'], close: ['', louder ? 'Almost — a little more sound' : 'Almost — a little gentler'],
@@ -1341,25 +1615,33 @@ if (typeof module !== 'undefined') module.exports = { parseLessonNotes: parseLes
   }
   function coachSummary(c) {
     if (!c) return '';
-    var parts = [], ls = c.loud.summary();
-    if (c.loudNote) parts.push((c.loudNote.dir === 'louder' ? 'Louder' : 'Softer') + ': ' + (ls.learning ? 'still learning usual level' :
-      ls.nudges + ' nudge' + (ls.nudges === 1 ? '' : 's') + (ls.metPct !== null ? ', met ' + ls.metPct + '% of playing' : '')));
+    var parts = [];
+    // Louder/softer is not reported. Dynamics words can still be parsed from a transcript, but they stay off the screen and out of the log.
+    if (LOUD_COACH_ON && c.loud && c.loudNote) {
+      var ls = c.loud.summary();
+      parts.push((c.loudNote.dir === 'louder' ? 'Louder' : 'Softer') + ': ' + (ls.learning ? 'still learning usual level' :
+        ls.nudges + ' nudge' + (ls.nudges === 1 ? '' : 's') + (ls.metPct !== null ? ', met ' + ls.metPct + '% of playing' : '')));
+      if (ls.sessDb !== null && ls.sessSecs >= 20) parts.push('Level ' + Math.round(ls.sessDb) + ' dB' + (c.base ? ' (usual ' + Math.round(c.base.db) + ')' : ''));
+    }
     if (c.tempoNote) { var tp = c.tempo; parts.push('Tempo ' + c.tempoNote.bpm + ': ' + (tp.checks ? tp.nudges + ' nudge' + (tp.nudges === 1 ? '' : 's') + ', on target ' +
       Math.round(tp.ok / tp.checks * 100) + '% of readings, last ~' + tp.lastYou : 'no confident reading')); }
     var rem = reminders(c); if (rem.length) parts.push('Reminders worked on: ' + rem.filter(function (n) { return c.done[n.id]; }).length + '/' + rem.length);
-    if (ls.sessDb !== null && ls.sessSecs >= 20) parts.push('Level ' + Math.round(ls.sessDb) + ' dB' + (c.base ? ' (usual ' + Math.round(c.base.db) + ')' : ''));
     return parts.join(' · ');
   }
   function endCoach(s) {
     var c = s.coach; if (!c) return;
     s.coaching = coachSummary(c);
-    var ls = c.loud.summary(), nb = updateBaseline(store.get('loudBase.' + s.kid.name, null), ls.sessDb, ls.sessSecs, !!c.loudNote);
-    if (nb) store.set('loudBase.' + s.kid.name, nb);
-    $('nudge').classList.remove('on');
+    if (LOUD_COACH_ON && c.loud) {
+      var ls = c.loud.summary(), nb = updateBaseline(store.get('loudBase.' + s.kid.name, null), ls.sessDb, ls.sessSecs, !!c.loudNote);
+      if (nb) store.set('loudBase.' + s.kid.name, nb);
+    }
+    if ($('nudge')) $('nudge').classList.remove('on');
   }
-  if (IOSV !== null && IOSV < 14.05 && !SR) $('lessonHint').textContent = 'Grown-ups: tap 🎓 Lesson when the teacher starts, then type the teacher’s notes (live notes need a newer iPad).';
+  if (NOTES_ON && IOSV !== null && IOSV < 14.05 && !SR && $('lessonHint')) $('lessonHint').textContent = 'Grown-ups: tap 🎓 Lesson when the teacher starts, then type the teacher’s notes (live notes need a newer iPad).';
   renderKids(); flush(); flushLessons();
-  window.__wpt = { metro: metro, det: det, KIDS: KIDS, logSession: logSession, getSession: function () { return session; },
+  window.__wpt = { metro: metro, det: det, KIDS: KIDS, NOTES_ON: NOTES_ON, LOUD_COACH_ON: LOUD_COACH_ON,
+    analyzeTone: typeof analyzeTone === 'function' ? analyzeTone : null,
+    logSession: logSession, getSession: function () { return session; },
     lessonsOf: lessonsOf, openKid: openKid, getLesson: function () { return lesson; }, checkServer: checkServer, store: store, getAudio: function () { return audio; } }; // for testing
 })();
 </script>
